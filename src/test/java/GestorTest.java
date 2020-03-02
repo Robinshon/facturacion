@@ -1,3 +1,6 @@
+import cliente.*;
+
+import gestor.Gestor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

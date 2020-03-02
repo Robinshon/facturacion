@@ -1,3 +1,7 @@
+package cliente;
+
+import cliente.Cliente;
+
 import java.util.Calendar;
 
 public class Particulares extends Cliente {

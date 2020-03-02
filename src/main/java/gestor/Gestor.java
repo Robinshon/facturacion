@@ -1,7 +1,10 @@
+package gestor;
+
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
+import cliente.*;
+
 
 public class Gestor {
     private Set<Cliente> clientes;

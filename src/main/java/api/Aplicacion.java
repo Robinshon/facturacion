@@ -1,6 +1,11 @@
+package api;
+
+import gestor.Gestor;
+
 import java.util.GregorianCalendar;
 import java.util.Scanner;
 import java.util.Set;
+import cliente.*;
 
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
