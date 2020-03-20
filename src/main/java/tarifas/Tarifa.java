@@ -1,4 +1,4 @@
-package cliente;
+package tarifas;
 
 public class Tarifa {
     private double precioPorSegundo;

@@ -1,4 +1,8 @@
-package cliente;
+package clientes;
+
+import facturas.Factura;
+import llamadas.Llamada;
+import tarifas.Tarifa;
 
 import java.util.*;
 
@@ -10,7 +14,7 @@ public abstract class Cliente {
     private Calendar fechaAlta;
     private Tarifa tarifa;
     private Set<Llamada> llamadas;
-    private HashMap<String,Factura> facturas;
+    private HashMap<String, Factura> facturas;
 
     public Cliente(String nombre, String NIF, Direccion direccion, String email, Tarifa tarifa, Calendar fechaAlta){
         this.nombre = nombre;

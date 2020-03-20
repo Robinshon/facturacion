@@ -1,67 +1,41 @@
-package api;
+package menu;
 
+import facturas.Factura;
 import gestor.Gestor;
 
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Set;
-import cliente.*;
+import clientes.*;
+import llamadas.Llamada;
+import tarifas.Tarifa;
 
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
-public class Aplicacion {
-    static Scanner scanner = new Scanner(System.in);
-    static boolean terminar = false;
-    static Gestor gestor = new Gestor();
+public class Menu {
     public static void main(String [] args) {
 
         menuPrincipal();
-        scanner.close();
 
     }
     public static void menuPrincipal(){
-        while (!terminar) {
-            System.out.println("¡Inserta el numero de operacion!");
-            System.out.println("1. Operaciones con cliente");
-            System.out.println("2. Operaciones con llamada");
-            System.out.println("3. Operaciones con factura");
-            System.out.println("0. Salir \n");
-            int operacion = parseInt(scanner.nextLine());
-            switch(operacion){
-                case 1:
-                    operacionCliente();
-                    break;
-
-                case 2:
-                    operacionLlamada();
-                    break;
-
-                case 3:
-                    operacionFactura();
-                    break;
-
-                case 0:
-                    terminar = true;
-                    break;
-            }
-        }
-    }
-    public static void operacionCliente(){
-        while (!terminar) {
-            System.out.println("!Elija la operacion¡");
-            System.out.println("1. Añadir cliente");
-            System.out.println("2. Borrar cliente");
-            System.out.println("3. Cambiar la tarifa de un cliente");
-            System.out.println("4. Recuperar datos de un cliente");
-            System.out.println("5. Listar clientes");
-            System.out.println("0. Volver al menu principal \n");
-            int operacion = parseInt(scanner.nextLine());
-            String nif;
+        Scanner scanner = new Scanner(System.in);
+        Gestor gestor = new Gestor();
+        OpcionMenu opcionMenu;
+        do {
+            System.out.println(OpcionMenu.menu());
+            System.out.print("Elige una opción: ");
+            byte opcion = scanner.nextByte();
+            System.out.print("\n");
+            opcionMenu = OpcionMenu.obtenerOpcion(opcion);
+            String nif, codigo;
             double tarifa;
-            switch(operacion){
-                case 1:
+            int year,month,day,hour,minute,second,duracion,yearI,yearF,monthI,monthF,dayI,dayF;
+            scanner.nextLine();
+            switch (opcionMenu) {
+                case DAR_DE_ALTA_CLIENTE:
                     System.out.println("Nombre: ");
                     String nombre = scanner.nextLine();
                     System.out.println("Apellido(si es una cadena vacia es una empresa): ");
@@ -79,11 +53,11 @@ public class Aplicacion {
                     System.out.println("Tarifa: ");
                     tarifa = parseDouble(scanner.nextLine());
                     System.out.println("Año: ");
-                    int year = parseInt(scanner.nextLine());
+                    year = parseInt(scanner.nextLine());
                     System.out.println("Mes: ");
-                    int month = parseInt(scanner.nextLine());
+                    month = parseInt(scanner.nextLine());
                     System.out.println("Dia: ");
-                    int day = parseInt(scanner.nextLine());
+                    day = parseInt(scanner.nextLine());
                     Cliente c;
                     if(apellido.equals("")){
                         c = new Empresa(nombre,nif,new Direccion(cp,provincia,poblacion),email, new Tarifa(tarifa),new GregorianCalendar(year,month,day));
@@ -93,74 +67,52 @@ public class Aplicacion {
                     }
                     gestor.addCliente(c);
                     break;
-
-                case 2:
+                case BORRAR_CLIENTE:
                     System.out.println("NIF: ");
                     nif = scanner.nextLine();
                     gestor.removeCliente(nif);
                     break;
-
-                case 3:
+                case CAMBIAR_TARIFA:
                     System.out.println("NIF: ");
                     nif = scanner.nextLine();
                     System.out.println("Nueva tarifa: ");
                     tarifa = parseDouble(scanner.nextLine());
                     gestor.setTarifa(nif,new Tarifa(tarifa));
                     break;
-
-                case 4:
+                case DATOS_CLIENTE:
                     System.out.println("NIF: ");
                     nif = scanner.nextLine();
                     System.out.println(gestor.listarDatos(nif) + "\n");
                     break;
-
-                case 5:
+                case LISTA_CLIENTE:
                     HashMap<String,Cliente> clientes = gestor.listaClientes();
                     for (String cliente : clientes.keySet()){
                         System.out.println(clientes.get(cliente).toString());
                     }
                     System.out.println();
                     break;
-
-
-                case 0:
-                    menuPrincipal();
-                    break;
-            }
-        }
-    }
-    public static void operacionLlamada() {
-        while (!terminar) {
-            System.out.println("!Elija la operacion¡");
-            System.out.println("1. Añadir llamada");
-            System.out.println("2. Listar llamadas");
-            System.out.println("0. Volver al menu principal \n");
-            int operacion = parseInt(scanner.nextLine());
-            String nif;
-            switch (operacion) {
-                case 1:
+                case NUEVA_LLAMADA:
                     System.out.println("NIF: ");
                     nif = scanner.nextLine();
                     System.out.println("Telefono: ");
                     String telefono = scanner.nextLine();
                     System.out.println("Año: ");
-                    int year = parseInt(scanner.nextLine());
+                    year = parseInt(scanner.nextLine());
                     System.out.println("Mes: ");
-                    int month = parseInt(scanner.nextLine());
+                    month = parseInt(scanner.nextLine());
                     System.out.println("Dia: ");
-                    int day = parseInt(scanner.nextLine());
+                    day = parseInt(scanner.nextLine());
                     System.out.println("Hora: ");
-                    int hour = parseInt(scanner.nextLine());
+                    hour = parseInt(scanner.nextLine());
                     System.out.println("Minutos: ");
-                    int minute = parseInt(scanner.nextLine());
+                    minute = parseInt(scanner.nextLine());
                     System.out.println("Segundos: ");
-                    int second = parseInt(scanner.nextLine());
+                    second = parseInt(scanner.nextLine());
                     System.out.println("Duracion llamada en segundos: ");
-                    int duracion = parseInt(scanner.nextLine());
+                    duracion = parseInt(scanner.nextLine());
                     gestor.addLlamada(new Llamada(telefono, new GregorianCalendar(year,month,day,hour,minute,second),duracion),nif);
                     break;
-
-                case 2:
+                case LISTADO_LLAMADAS:
                     System.out.println("NIF: ");
                     nif = scanner.nextLine();
                     Set<Llamada> llamadas = gestor.listaLlamadas(nif);
@@ -168,54 +120,33 @@ public class Aplicacion {
                         System.out.println(llamada.toString());
                     }
                     break;
-
-                case 0:
-                    menuPrincipal();
-                    break;
-            }
-
-        }
-    }
-    public static void operacionFactura(){
-        while (!terminar) {
-            System.out.println("!Elija la operacion¡");
-            System.out.println("1. Emitir factura");
-            System.out.println("2. Recuperar factura");
-            System.out.println("3. Recuperar facturas de un cliente");
-            System.out.println("0. Volver al menu principal \n");
-            int operacion = parseInt(scanner.nextLine());
-            String nif;
-            String codigo;
-            switch (operacion) {
-                case 1:
+                case NUEVA_FACTURA:
                     System.out.println("NIF: ");
                     nif = scanner.nextLine();
                     System.out.println("Codigo: ");
                     codigo = scanner.nextLine();
                     System.out.println("Año inicio: ");
-                    int yearI = parseInt(scanner.nextLine());
+                    yearI = parseInt(scanner.nextLine());
                     System.out.println("Mes inicio: ");
-                    int monthI = parseInt(scanner.nextLine());
+                    monthI = parseInt(scanner.nextLine());
                     System.out.println("Dia inicio: ");
-                    int dayI = parseInt(scanner.nextLine());
+                    dayI = parseInt(scanner.nextLine());
                     System.out.println("Año final: ");
-                    int yearF = parseInt(scanner.nextLine());
+                    yearF = parseInt(scanner.nextLine());
                     System.out.println("Mes final: ");
-                    int monthF = parseInt(scanner.nextLine());
+                    monthF = parseInt(scanner.nextLine());
                     System.out.println("Dia final: ");
-                    int dayF = parseInt(scanner.nextLine());
+                    dayF = parseInt(scanner.nextLine());
                     gestor.emitirFactura(codigo,nif,new GregorianCalendar(yearI,monthI,dayI),new GregorianCalendar(yearF,monthF,dayF));
                     break;
-
-                case 2:
+                case DATOS_FACTURA:
                     System.out.println("NIF: ");
                     nif = scanner.nextLine();
                     System.out.println("Codigo: ");
                     codigo = scanner.nextLine();
                     System.out.println(gestor.facturaDatos(nif,codigo));
                     break;
-
-                case 3:
+                case MOSTRAR_FACTURA:
                     System.out.println("NIF: ");
                     nif = scanner.nextLine();
                     HashMap<String,Factura> facturas = gestor.listaFacturas(nif);
@@ -223,11 +154,19 @@ public class Aplicacion {
                         System.out.println(facturas.get(factura).toString());
                     }
                     break;
+                case BETWEEN_ALTA_CLIENTE:
 
-                case 0:
-                    menuPrincipal();
+                    break;
+                case BETWEEN_LLAMADAS:
+
+                    break;
+                case BETWEEN_FACTURAS:
+
+                    break;
+                case SALIR:
+                    scanner.close();
                     break;
             }
-        }
+        } while(opcionMenu != OpcionMenu.SALIR);
     }
 }

@@ -2,9 +2,12 @@ package gestor;
 
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
-import cliente.*;
+
+import facturas.Factura;
+import clientes.*;
+import llamadas.Llamada;
+import tarifas.Tarifa;
 
 
 public class Gestor {

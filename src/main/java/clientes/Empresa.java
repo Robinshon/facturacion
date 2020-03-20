@@ -1,6 +1,6 @@
-package cliente;
+package clientes;
 
-import cliente.Cliente;
+import tarifas.Tarifa;
 
 import java.util.Calendar;
 

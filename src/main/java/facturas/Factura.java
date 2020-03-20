@@ -1,7 +1,8 @@
-package cliente;
+package facturas;
+
+import tarifas.Tarifa;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class Factura {
     private String codigo;
