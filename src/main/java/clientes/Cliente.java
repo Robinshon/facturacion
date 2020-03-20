@@ -1,5 +1,6 @@
 package clientes;
 
+import excepciones.NotExistingInvoceException;
 import facturas.Factura;
 import llamadas.Llamada;
 import tarifas.Tarifa;
@@ -52,8 +53,11 @@ public abstract class Cliente {
         return facturas;
     }
 
-    public Factura buscaFactura(String codigo){
-        return facturas.get(codigo);
+    public Factura buscaFactura(String codigo) throws NotExistingInvoceException {
+        if(facturas.containsKey(codigo)){
+            return facturas.get(codigo);
+        }
+        throw new NotExistingInvoceException();
     }
 
     public String toString(){

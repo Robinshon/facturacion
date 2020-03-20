@@ -1,3 +1,6 @@
+import excepciones.ExistingClientException;
+import excepciones.NotExistingClientException;
+import excepciones.NotExistingInvoceException;
 import facturas.Factura;
 import clientes.*;
 
@@ -26,7 +29,7 @@ class GestorTest {
     Factura factura2 = new Factura("2",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1),100);
 
     @BeforeEach
-    public void prepara() {
+    public void prepara() throws ExistingClientException, NotExistingClientException {
         gestor.addCliente(c2);
         gestor.addLlamada(llamada2,"x212323112");
         gestor.emitirFactura("2","x212323112",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1));
@@ -35,32 +38,32 @@ class GestorTest {
 
 
     @Test
-    void addCliente() {
+    void addCliente() throws ExistingClientException {
         assertTrue(gestor.addCliente(c));
         assertFalse(gestor.addCliente(c1));
     }
 
     @Test
-    void removeCliente() {
+    void removeCliente() throws NotExistingClientException {
         assertTrue(gestor.removeCliente("x212323112"));
         assertFalse(gestor.removeCliente("x212331"));
     }
 
     @Test
-    void setTarifa() {
+    void setTarifa() throws NotExistingClientException {
         assertTrue(gestor.setTarifa("x212323112", tarifa));
         assertFalse(gestor.setTarifa("x212331", tarifa));
     }
 
     @Test
-    void addLlamada() {
+    void addLlamada() throws NotExistingClientException {
         assertTrue(gestor.addLlamada(llamada, "x212323112"));
         assertFalse(gestor.addLlamada(llamada, "x212331"));
     }
 
 
     @Test
-    void emitirFactura() {
+    void emitirFactura() throws NotExistingClientException {
         assertTrue(gestor.emitirFactura("1","x212323112",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1)));
         assertFalse(gestor.emitirFactura("1","x212323112",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1)));
         assertFalse(gestor.emitirFactura("1","x212331",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1)));
@@ -69,12 +72,12 @@ class GestorTest {
     }
 
     @Test
-    void listarDatos() {
+    void listarDatos() throws NotExistingClientException {
         assertEquals(gestor.listarDatos("x212323112"),c2.toString());
     }
 
     @Test
-    void facturaDatos() {
+    void facturaDatos() throws NotExistingClientException, NotExistingInvoceException {
         assertEquals(gestor.facturaDatos("x212323112","2"),factura2.toString());
     }
 }
