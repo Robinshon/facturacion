@@ -23,7 +23,7 @@ public class Direccion {
     public String getPoblacion() {
         return poblacion;
     }
-    public String getDireccion(){
+    public String toString(){
         return "Codigo postal: " + getCodPostal() + " / " + "Provincia: " + getProvincia() + " / " + "Poblacion: " + getPoblacion();
     }
 }

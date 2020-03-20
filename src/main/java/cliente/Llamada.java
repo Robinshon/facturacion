@@ -26,7 +26,7 @@ public class Llamada {
         return telefono;
     }
 
-    public String getLlamada(){
+    public String toString(){
         return "Telefono: " + getTelefono() + " / " + "Fecha llamada: " + getFechaNormal() + " / " + "Duracion: " + getDuracion();
     }
 }

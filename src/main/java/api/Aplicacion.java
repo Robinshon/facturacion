@@ -3,6 +3,7 @@ package api;
 import gestor.Gestor;
 
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Set;
 import cliente.*;
@@ -88,7 +89,7 @@ public class Aplicacion {
                         c = new Empresa(nombre,nif,new Direccion(cp,provincia,poblacion),email, new Tarifa(tarifa),new GregorianCalendar(year,month,day));
                     }
                     else{
-                        c = new Particulares(nombre,apellido,nif,new Direccion(cp,provincia,poblacion),email, new Tarifa(tarifa),new GregorianCalendar(year,month,day));
+                        c = new Particular(nombre,apellido,nif,new Direccion(cp,provincia,poblacion),email, new Tarifa(tarifa),new GregorianCalendar(year,month,day));
                     }
                     gestor.addCliente(c);
                     break;
@@ -114,9 +115,9 @@ public class Aplicacion {
                     break;
 
                 case 5:
-                    Set<Cliente> clientes = gestor.listaClientes();
-                    for (Cliente cliente : clientes){
-                        System.out.println(cliente.getCliente());
+                    HashMap<String,Cliente> clientes = gestor.listaClientes();
+                    for (String cliente : clientes.keySet()){
+                        System.out.println(clientes.get(cliente).toString());
                     }
                     System.out.println();
                     break;
@@ -164,7 +165,7 @@ public class Aplicacion {
                     nif = scanner.nextLine();
                     Set<Llamada> llamadas = gestor.listaLlamadas(nif);
                     for(Llamada llamada : llamadas){
-                        System.out.println(llamada.getLlamada());
+                        System.out.println(llamada.toString());
                     }
                     break;
 
@@ -217,9 +218,9 @@ public class Aplicacion {
                 case 3:
                     System.out.println("NIF: ");
                     nif = scanner.nextLine();
-                    Set<Factura> facturas = gestor.listaFacturas(nif);
-                    for(Factura factura : facturas){
-                        System.out.println(factura.getFactura());
+                    HashMap<String,Factura> facturas = gestor.listaFacturas(nif);
+                    for(String factura : facturas.keySet()){
+                        System.out.println(facturas.get(factura).toString());
                     }
                     break;
 

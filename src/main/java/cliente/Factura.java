@@ -48,7 +48,7 @@ public class Factura {
     public double getImporte() {
         return importe;
     }
-    public String getFactura(){
+    public String toString(){
         return "Codigo factura: " + getCodigo() + " / " + "Tarifa: " + tarifa.getPrecioPorSegundo() + " / " + "Fecha emision: " + getFechaEmisionNormal() + " / " + "Fecha inicio: " + getFechaInicioNormal() + " / " + "Fecha final: " + getFechaFinNormal() + " / " + "Importe: " + getImporte();
     }
 

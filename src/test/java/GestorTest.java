@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class GestorTest {
 
     Gestor gestor = new Gestor();
-    Cliente c = new Particulares("Pepe", "Sancho", "x212331", new Direccion(123, "Castellon", "Oropesa"), "hola@lo", new Tarifa(1), new GregorianCalendar(2019, 2, 20));
-    Cliente c1 = new Particulares("Juancho", "Pepito", "x212331", new Direccion(121, "Castellon", "Benicassim"), "ha@lo", new Tarifa(1), new GregorianCalendar(2020, 1, 10));
-    Cliente c2 = new Particulares("Pepe", "Sancho", "x212323112", new Direccion(123, "Castellon", "Oropesa"), "hola@lo", new Tarifa(1), new GregorianCalendar(2019, 2, 20));
+    Cliente c = new Particular("Pepe", "Sancho", "x212331", new Direccion(123, "Castellon", "Oropesa"), "hola@lo", new Tarifa(1), new GregorianCalendar(2019, 2, 20));
+    Cliente c1 = new Particular("Juancho", "Pepito", "x212331", new Direccion(121, "Castellon", "Benicassim"), "ha@lo", new Tarifa(1), new GregorianCalendar(2020, 1, 10));
+    Cliente c2 = new Particular("Pepe", "Sancho", "x212323112", new Direccion(123, "Castellon", "Oropesa"), "hola@lo", new Tarifa(1), new GregorianCalendar(2019, 2, 20));
     Tarifa tarifa = new Tarifa(1);
     Tarifa tarifa2 = new Tarifa(1);
     Llamada llamada = new Llamada("642609113", new GregorianCalendar(2020, 1, 1, 12, 00, 00), 200);
@@ -67,12 +67,12 @@ class GestorTest {
 
     @Test
     void listarDatos() {
-        assertEquals(gestor.listarDatos("x212323112"),c2.getCliente());
+        assertEquals(gestor.listarDatos("x212323112"),c2.toString());
     }
 
     @Test
     void facturaDatos() {
-        assertEquals(gestor.facturaDatos("x212323112","2"),factura2.getFactura());
+        assertEquals(gestor.facturaDatos("x212323112","2"),factura2.toString());
     }
 }
 

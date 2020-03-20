@@ -1,100 +1,74 @@
 package gestor;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import cliente.*;
 
 
 public class Gestor {
-    private Set<Cliente> clientes;
+    private HashMap<String,Cliente> clientes;
     public Gestor(){
-        clientes = new HashSet<Cliente>();
+        clientes = new HashMap<String,Cliente>();
     }
     public boolean addCliente(Cliente cliente){
-        for(Cliente client : clientes){
-            if(client.getNIF().equals(cliente.getNIF())){
-                return false;
-            }
+        if(clientes.containsKey(cliente.getNIF())){
+            return false;
         }
-        return clientes.add(cliente);
+        clientes.put(cliente.getNIF(),cliente);
+        return true;
     }
     public boolean removeCliente(String nif){
-        for ( Cliente cliente : clientes){
-            if(cliente.getNIF().equals(nif)){
-                return clientes.remove(cliente);
-            }
-        }
-        return false;
+        clientes.remove(nif);
+        return true;
     }
 
     public boolean setTarifa(String nif, Tarifa tarifa){
-        for(Cliente client : clientes){
-            if(client.getNIF().equals(nif)){
-                return client.setTarifa(tarifa);
-            }
-        }
-        return false;
+        Cliente cliente = clientes.get(nif);
+        return cliente.setTarifa(tarifa);
     }
     public String listarDatos(String nif){
-        for(Cliente client : clientes){
-            if(client.getNIF().equals(nif)){
-                return client.getCliente();
-            }
-        }
-        return null;
+        Cliente cliente = clientes.get(nif);
+        return cliente.toString();
+
     }
-    public Set listaClientes(){
+    public HashMap<String,Cliente> listaClientes(){
         return clientes;
     }
 
     public boolean addLlamada(Llamada llamada, String nif){
-        for(Cliente client : clientes){
-            if(client.getNIF().equals(nif)){
-                return client.addLlamada(llamada);
-            }
-        }
-        return false;
+        Cliente cliente = clientes.get(nif);
+        return cliente.addLlamada(llamada);
+
     }
-    public Set listaLlamadas(String nif){
-        for(Cliente client : clientes ){
-            if(client.getNIF().equals(nif)){
-                return client.listaLlamadas();
-            }
-        }
-        return null;
+    public Set<Llamada> listaLlamadas(String nif){
+        Cliente cliente = clientes.get(nif);
+        return cliente.listaLlamadas();
     }
     public boolean emitirFactura(String codigo, String nif, Calendar fechaInicio, Calendar fechaFin){
         Factura newFactura = null;
         double importe = 0.0;
         Set<Llamada> llamadasRango;
-        for(Cliente client : clientes){
-            if(client.getNIF().equals(nif)){
-                llamadasRango = client.llamadasRango(fechaInicio,fechaFin);
-                for(Llamada llamada : llamadasRango){
-                    importe += (llamada.getDuracion() * client.getTarifa().getPrecioPorSegundo());
-                }
-                newFactura = new Factura(codigo,client.getTarifa(),Calendar.getInstance(),fechaInicio,fechaFin,importe);
-                return client.addFactura(newFactura);
+        Cliente cliente = clientes.get(nif);
+        if(cliente != null){
+            llamadasRango = cliente.llamadasRango(fechaInicio,fechaFin);
+            for(Llamada llamada : llamadasRango){
+                importe += (llamada.getDuracion() * cliente.getTarifa().getPrecioPorSegundo());
             }
+            newFactura = new Factura(codigo,cliente.getTarifa(),Calendar.getInstance(),fechaInicio,fechaFin,importe);
+            return cliente.addFactura(newFactura);
         }
         return false;
     }
     public String facturaDatos(String nif, String codigo){
-        for(Cliente client : clientes){
-            if(client.getNIF().equals(nif)){
-                return client.buscaFactura(codigo).getFactura();
-            }
-        }
-        return null;
+        Cliente cliente = clientes.get(nif);
+        return cliente.buscaFactura(codigo).toString();
     }
 
-    public Set listaFacturas(String nif){
-        for(Cliente client : clientes){
-            if(client.getNIF().equals(nif)){
-                return client.listaFacturas();
-            }
-        }
-        return null;
+    public HashMap<String,Factura> listaFacturas(String nif){
+        Cliente cliente = clientes.get(nif);
+        return cliente.listaFacturas();
+
     }
 }

@@ -1,9 +1,6 @@
 package cliente;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public abstract class Cliente {
     private String nombre;
@@ -13,7 +10,7 @@ public abstract class Cliente {
     private Calendar fechaAlta;
     private Tarifa tarifa;
     private Set<Llamada> llamadas;
-    private Set<Factura> facturas;
+    private HashMap<String,Factura> facturas;
 
     public Cliente(String nombre, String NIF, Direccion direccion, String email, Tarifa tarifa, Calendar fechaAlta){
         this.nombre = nombre;
@@ -23,19 +20,15 @@ public abstract class Cliente {
         this.tarifa = tarifa;
         this.fechaAlta = fechaAlta;
         this.llamadas = new HashSet<Llamada>();
-        this.facturas = new HashSet<Factura>();
+        this.facturas = new HashMap<String,Factura>();
     }
-    public Calendar getFecha(){
-        return fechaAlta;
-    }
-
     public boolean addLlamada(Llamada llamada){
         return llamadas.add(llamada);
     }
-    public Set listaLlamadas(){
+    public Set<Llamada> listaLlamadas(){
         return llamadas;
     }
-    public Set llamadasRango(Calendar fechaInicio, Calendar fechaFin){
+    public Set<Llamada> llamadasRango(Calendar fechaInicio, Calendar fechaFin){
         Set<Llamada> llamadasRango = new HashSet<Llamada>();
         for(Llamada llamada : llamadas){
             if(llamada.getFecha().after(fechaInicio) && llamada.getFecha().before(fechaFin)){
@@ -45,28 +38,22 @@ public abstract class Cliente {
         return llamadasRango;
     }
     public boolean addFactura(Factura factura){
-        for(Factura fact : facturas){
-            if(fact.getCodigo().equals(factura.getCodigo())){
-                return false;
-            }
+        if(facturas.containsKey(factura.getCodigo())){
+            return false;
         }
-        return facturas.add(factura);
+        facturas.put(factura.getCodigo(),factura);
+        return true;
     }
-    public Set listaFacturas(){
+    public HashMap<String,Factura> listaFacturas(){
         return facturas;
     }
 
     public Factura buscaFactura(String codigo){
-        for(Factura factura: facturas){
-            if(factura.getCodigo().equals(codigo)){
-                return factura;
-            }
-        }
-        return null;
+        return facturas.get(codigo);
     }
 
-    public String getCliente(){
-        return "Nombre: " + getNombre() + " / " + "NIF: " + getNIF() + " / " + "Direccion: " + direccion.getDireccion() + " / " + "Fecha de alta: " + getFechaAltaNormal() + " / " + "Email: " + getEmail() + " / " + "Tarifa: " + tarifa.getPrecioPorSegundo() ;
+    public String toString(){
+        return "Nombre: " + getNombre() + " / " + "NIF: " + getNIF() + " / " + "Direccion: " + direccion.toString() + " / " + "Fecha de alta: " + getFecha() + " / " + "Email: " + getEmail() + " / " + "Tarifa: " + tarifa.getPrecioPorSegundo() ;
     }
 
     public String getNombre() {
@@ -81,10 +68,7 @@ public abstract class Cliente {
         return email;
     }
 
-    public Calendar getFechaAlta() {
-        return fechaAlta;
-    }
-    public String getFechaAltaNormal() {
+    public String getFecha() {
         return fechaAlta.get(Calendar.DAY_OF_MONTH) + "#" + fechaAlta.get(Calendar.MONTH) + "#" + fechaAlta.get(Calendar.YEAR);
     }
 
