@@ -1,4 +1,5 @@
 import excepciones.ExistingClientException;
+import excepciones.IllegalPeriodException;
 import excepciones.NotExistingClientException;
 import excepciones.NotExistingInvoceException;
 import facturas.Factura;
@@ -29,7 +30,7 @@ class GestorTest {
     Factura factura2 = new Factura("2",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1),100);
 
     @BeforeEach
-    public void prepara() throws ExistingClientException, NotExistingClientException {
+    public void prepara() throws ExistingClientException, NotExistingClientException, IllegalPeriodException {
         gestor.addCliente(c2);
         gestor.addLlamada(llamada2,"x212323112");
         gestor.emitirFactura("2","x212323112",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1));
@@ -38,20 +39,25 @@ class GestorTest {
 
 
     @Test
-    void addCliente() throws ExistingClientException {
+    void addCliente() throws ExistingClientException, NotExistingClientException {
         assertTrue(gestor.addCliente(c));
         assertFalse(gestor.addCliente(c1));
+        assertEquals(gestor.listarDatos("x212331"),c);
     }
 
     @Test
     void removeCliente() throws NotExistingClientException {
+        assertEquals(gestor.listarDatos("x212323112"),c2);
         assertTrue(gestor.removeCliente("x212323112"));
+        assertNotEquals(gestor.listarDatos("x212323112"),c2);
+        //borrar cliente que no esta
         assertFalse(gestor.removeCliente("x212331"));
     }
 
     @Test
     void setTarifa() throws NotExistingClientException {
         assertTrue(gestor.setTarifa("x212323112", tarifa));
+        //el cliente no esta
         assertFalse(gestor.setTarifa("x212331", tarifa));
     }
 
@@ -63,9 +69,11 @@ class GestorTest {
 
 
     @Test
-    void emitirFactura() throws NotExistingClientException {
+    void emitirFactura() throws NotExistingClientException, IllegalPeriodException {
         assertTrue(gestor.emitirFactura("1","x212323112",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1)));
+        //si intentamos usar el mismo codigo para otra factura error
         assertFalse(gestor.emitirFactura("1","x212323112",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1)));
+        //si intentamos emitir una factura a un cliente que no esta error
         assertFalse(gestor.emitirFactura("1","x212331",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1)));
 
 
@@ -73,11 +81,13 @@ class GestorTest {
 
     @Test
     void listarDatos() throws NotExistingClientException {
+        //comprobamos que los datos son los mismos en la base de datos a los que tenemos en c2
         assertEquals(gestor.listarDatos("x212323112"),c2.toString());
     }
 
     @Test
     void facturaDatos() throws NotExistingClientException, NotExistingInvoceException {
+        //comprobamos que los datos son los mismos en la base de datos a los que tenemos en factura2
         assertEquals(gestor.facturaDatos("x212323112","2"),factura2.toString());
     }
 }

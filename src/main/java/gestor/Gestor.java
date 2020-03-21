@@ -1,8 +1,7 @@
 package gestor;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 import excepciones.*;
 import facturas.Factura;
@@ -10,12 +9,17 @@ import clientes.*;
 import llamadas.Llamada;
 import tarifas.Tarifa;
 
+import static fechas.EntreFechas.*;
 
-public class Gestor {
+
+public class Gestor implements Serializable{
     private HashMap<String,Cliente> clientes;
     public Gestor(){
+
         clientes = new HashMap<String,Cliente>();
     }
+
+
     public boolean addCliente(Cliente cliente) throws ExistingClientException {
         if(clientes.containsKey(cliente.getNIF())){
             throw new ExistingClientException();
@@ -23,6 +27,7 @@ public class Gestor {
         clientes.put(cliente.getNIF(),cliente);
         return true;
     }
+
     public boolean removeCliente(String nif) throws NotExistingClientException {
         if(clientes.containsKey(nif)){
             clientes.remove(nif);
@@ -72,7 +77,10 @@ public class Gestor {
         }
         throw new NotExistingClientException();
     }
-    public boolean emitirFactura(String codigo, String nif, Calendar fechaInicio, Calendar fechaFin) throws NotExistingClientException{
+    public boolean emitirFactura(String codigo, String nif, Calendar fechaInicio, Calendar fechaFin) throws NotExistingClientException, IllegalPeriodException{
+        if(fechaInicio.after(fechaFin)){
+            throw new IllegalPeriodException();
+        }
         if(!clientes.containsKey(nif)){
             throw new NotExistingClientException();
         }
@@ -98,9 +106,86 @@ public class Gestor {
        throw new NotExistingClientException();
     }
 
-    public HashMap<String,Factura> listaFacturas(String nif){
-        Cliente cliente = clientes.get(nif);
-        return cliente.listaFacturas();
+    public HashMap<String,Factura> listaFacturas(String nif) throws NotExistingClientException, NullListInvoicesException{
+        if(clientes.containsKey(nif)){
+            Cliente cliente = clientes.get(nif);
+            return cliente.listaFacturas();
+        }
+        throw new NotExistingClientException();
 
+    }
+    public Collection<Cliente> mostrarListaClientesEntreFechas(Calendar fechaInicio, Calendar fechaFin) throws IllegalPeriodException, NullListClientsException{
+        if(fechaInicio.after(fechaFin))
+            throw new IllegalPeriodException();
+
+        Collection<Cliente> clientes = this.clientes.values();
+        clientes = listaEntreFechas(clientes, fechaInicio, fechaFin);
+
+        if(clientes.isEmpty())
+            throw new NullListClientsException();
+
+        return clientes;
+    }
+
+    public Collection<Llamada> mostrarListaLlamadasEntreFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws NullListCallException, IllegalPeriodException, NotExistingClientException{
+        if(fechaInicio.after(fechaFin))
+            throw new IllegalPeriodException();
+
+        if(!clientes.get(nif).listaLlamadas().isEmpty())
+            throw new NotExistingClientException();
+
+        Collection<Llamada> llamadas = clientes.get(nif).listaLlamadas();
+        llamadas = listaEntreFechas(llamadas, fechaInicio, fechaFin);
+        if(llamadas.isEmpty())
+            throw new NullListCallException();
+
+        return llamadas;
+    }
+    public Collection<Factura> mostrarListaFacturasEntreFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws IllegalPeriodException, NotExistingClientException, NullListInvoicesException {
+        if(fechaInicio.after(fechaFin))
+            throw new IllegalPeriodException();
+
+        if(!clientes.containsKey(nif))
+            throw new NotExistingClientException();
+
+        Collection<Factura> facturas = clientes.get(nif).listaFacturas().values();
+        facturas = listaEntreFechas(facturas, fechaInicio, fechaFin);
+
+        if(facturas.isEmpty())
+            throw new NullListInvoicesException();
+
+        return facturas;
+    }
+
+
+
+    public void guardarDatos(){
+        FileOutputStream archive = null;
+        ObjectOutputStream object = null;
+        try {
+            archive = new FileOutputStream("data/clientes.bin");
+            object = new ObjectOutputStream(archive);
+            object.writeObject(clientes);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void cargarDatos(){
+        FileInputStream archive = null;
+        ObjectInputStream object = null;
+        try {
+            archive = new FileInputStream("data/clientes.bin");
+            object = new ObjectInputStream(archive);
+            clientes = (HashMap<String,Cliente>) object.readObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

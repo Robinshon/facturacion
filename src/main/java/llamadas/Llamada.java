@@ -1,8 +1,11 @@
 package llamadas;
 
+import fechas.EntreFechas;
+
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class Llamada {
+public class Llamada extends EntreFechas implements Serializable {
     private String telefono;
     private Calendar fechaYHora;
     private int duracion;
@@ -15,10 +18,10 @@ public class Llamada {
     public int getDuracion() {
         return duracion;
     }
-    public Calendar getFecha() {
+    public Calendar dameFecha(){
         return fechaYHora;
     }
-    public String getFechaNormal(){
+    public String getFecha(){
         return fechaYHora.get(Calendar.DAY_OF_MONTH) + "#" + fechaYHora.get(Calendar.MONTH) + "#" + fechaYHora.get(Calendar.YEAR) + "#" + fechaYHora.get(Calendar.HOUR_OF_DAY) + "#" +  fechaYHora.get(Calendar.MINUTE) + "#" + fechaYHora.get(Calendar.SECOND);
     }
     public String getTelefono() {
@@ -26,6 +29,6 @@ public class Llamada {
     }
 
     public String toString(){
-        return "Telefono: " + getTelefono() + " / " + "Fecha llamada: " + getFechaNormal() + " / " + "Duracion: " + getDuracion();
+        return "Telefono: " + getTelefono() + " / " + "Fecha llamada: " + getFecha() + " / " + "Duracion: " + getDuracion();
     }
 }

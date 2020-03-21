@@ -2,9 +2,10 @@ package clientes;
 
 import tarifas.Tarifa;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class Particular extends Cliente {
+public class Particular extends Cliente implements Serializable {
     private String apellido;
     public Particular(String nombre, String apellido, String NIF, Direccion direccion, String email, Tarifa tarifa, Calendar fechaAlta){
         super(nombre, NIF, direccion, email, tarifa, fechaAlta);

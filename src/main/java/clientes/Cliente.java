@@ -1,13 +1,16 @@
 package clientes;
 
 import excepciones.NotExistingInvoceException;
+import excepciones.NullListInvoicesException;
 import facturas.Factura;
+import fechas.EntreFechas;
 import llamadas.Llamada;
 import tarifas.Tarifa;
 
+import java.io.Serializable;
 import java.util.*;
 
-public abstract class Cliente {
+public abstract class Cliente extends EntreFechas implements Serializable {
     private String nombre;
     private String NIF;
     private Direccion direccion;
@@ -36,7 +39,7 @@ public abstract class Cliente {
     public Set<Llamada> llamadasRango(Calendar fechaInicio, Calendar fechaFin){
         Set<Llamada> llamadasRango = new HashSet<Llamada>();
         for(Llamada llamada : llamadas){
-            if(llamada.getFecha().after(fechaInicio) && llamada.getFecha().before(fechaFin)){
+            if(llamada.dameFecha().after(fechaInicio) && llamada.dameFecha().before(fechaFin)){
                 llamadasRango.add(llamada);
             }
         }
@@ -49,7 +52,10 @@ public abstract class Cliente {
         facturas.put(factura.getCodigo(),factura);
         return true;
     }
-    public HashMap<String,Factura> listaFacturas(){
+    public HashMap<String,Factura> listaFacturas() throws NullListInvoicesException {
+        if(facturas.isEmpty()){
+            throw new NullListInvoicesException();
+        }
         return facturas;
     }
 
@@ -76,6 +82,9 @@ public abstract class Cliente {
         return email;
     }
 
+    public Calendar dameFecha(){
+        return fechaAlta;
+    }
     public String getFecha() {
         return fechaAlta.get(Calendar.DAY_OF_MONTH) + "#" + fechaAlta.get(Calendar.MONTH) + "#" + fechaAlta.get(Calendar.YEAR);
     }

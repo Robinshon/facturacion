@@ -14,9 +14,10 @@ import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
 public class Menu {
-    public static void main(String [] args) throws NotExistingClientException, ExistingClientException, NullListCallException, NotExistingInvoceException, NullListClientsException {
+    public static void main(String [] args) throws NotExistingClientException, ExistingClientException, NullListCallException, NotExistingInvoceException, NullListClientsException, NullListInvoicesException, IllegalPeriodException {
         Scanner scanner = new Scanner(System.in);
         Gestor gestor = new Gestor();
+        gestor.cargarDatos();
         OpcionMenu opcionMenu;
         do {
             System.out.println(OpcionMenu.menu());
@@ -147,16 +148,57 @@ public class Menu {
                         System.out.println(facturas.get(factura).toString());
                     }
                     break;
-                case BETWEEN_ALTA_CLIENTE:
-
+                case FECHAS_ALTA_CLIENTE:
+                    System.out.println("Año inicio: ");
+                    yearI = parseInt(scanner.nextLine());
+                    System.out.println("Mes inicio: ");
+                    monthI = parseInt(scanner.nextLine());
+                    System.out.println("Dia inicio: ");
+                    dayI = parseInt(scanner.nextLine());
+                    System.out.println("Año final: ");
+                    yearF = parseInt(scanner.nextLine());
+                    System.out.println("Mes final: ");
+                    monthF = parseInt(scanner.nextLine());
+                    System.out.println("Dia final: ");
+                    dayF = parseInt(scanner.nextLine());
+                    gestor.mostrarListaClientesEntreFechas(new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
                     break;
-                case BETWEEN_LLAMADAS:
-
+                case FECHAS_LLAMADAS:
+                    System.out.println("NIF: ");
+                    nif = scanner.nextLine();
+                    System.out.println("Año inicio: ");
+                    yearI = parseInt(scanner.nextLine());
+                    System.out.println("Mes inicio: ");
+                    monthI = parseInt(scanner.nextLine());
+                    System.out.println("Dia inicio: ");
+                    dayI = parseInt(scanner.nextLine());
+                    System.out.println("Año final: ");
+                    yearF = parseInt(scanner.nextLine());
+                    System.out.println("Mes final: ");
+                    monthF = parseInt(scanner.nextLine());
+                    System.out.println("Dia final: ");
+                    dayF = parseInt(scanner.nextLine());
+                    gestor.mostrarListaLlamadasEntreFechas(nif,new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
                     break;
-                case BETWEEN_FACTURAS:
-
+                case FECHAS_FACTURAS:
+                    System.out.println("NIF: ");
+                    nif = scanner.nextLine();
+                    System.out.println("Año inicio: ");
+                    yearI = parseInt(scanner.nextLine());
+                    System.out.println("Mes inicio: ");
+                    monthI = parseInt(scanner.nextLine());
+                    System.out.println("Dia inicio: ");
+                    dayI = parseInt(scanner.nextLine());
+                    System.out.println("Año final: ");
+                    yearF = parseInt(scanner.nextLine());
+                    System.out.println("Mes final: ");
+                    monthF = parseInt(scanner.nextLine());
+                    System.out.println("Dia final: ");
+                    dayF = parseInt(scanner.nextLine());
+                    gestor.mostrarListaFacturasEntreFechas(nif,new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
                     break;
                 case SALIR:
+                    gestor.guardarDatos();
                     scanner.close();
                     break;
             }
