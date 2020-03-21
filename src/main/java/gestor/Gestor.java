@@ -131,7 +131,7 @@ public class Gestor implements Serializable{
         if(fechaInicio.after(fechaFin))
             throw new IllegalPeriodException();
 
-        if(!clientes.get(nif).listaLlamadas().isEmpty())
+        if(!clientes.containsKey(nif))
             throw new NotExistingClientException();
 
         Collection<Llamada> llamadas = clientes.get(nif).listaLlamadas();

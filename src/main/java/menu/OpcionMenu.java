@@ -10,8 +10,8 @@ public enum OpcionMenu {
     LISTADO_LLAMADAS("Listado llamadas"),
     NUEVA_FACTURA("Nueva Factura"),
     DATOS_FACTURA("Datos factura"),
-    MOSTRAR_FACTURA("Mostrar factura"),
-    FECHAS_ALTA_CLIENTE("Consultar  listado de clientes que fueron dados de alta entre dos fechas"),
+    MOSTRAR_FACTURAS("Mostrar lista facturas cliente"),
+    FECHAS_ALTA_CLIENTE("Consultar listado de clientes que fueron dados de alta entre dos fechas"),
     FECHAS_LLAMADAS("Consultar listado de llamadas de un cliente que fueron realizadas entre dos fechas"),
     FECHAS_FACTURAS("Consultar listado de facturas de un cliente emitidas entre dos fechas"),
     SALIR("Salir");

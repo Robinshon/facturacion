@@ -1,7 +1,4 @@
-import excepciones.ExistingClientException;
-import excepciones.IllegalPeriodException;
-import excepciones.NotExistingClientException;
-import excepciones.NotExistingInvoceException;
+import excepciones.*;
 import facturas.Factura;
 import clientes.*;
 
@@ -64,6 +61,7 @@ class GestorTest {
     @Test
     void addLlamada() throws NotExistingClientException {
         assertTrue(gestor.addLlamada(llamada, "x212323112"));
+        //el cliente no existe
         assertFalse(gestor.addLlamada(llamada, "x212331"));
     }
 
@@ -89,6 +87,11 @@ class GestorTest {
     void facturaDatos() throws NotExistingClientException, NotExistingInvoceException {
         //comprobamos que los datos son los mismos en la base de datos a los que tenemos en factura2
         assertEquals(gestor.facturaDatos("x212323112","2"),factura2.toString());
+    }
+
+    @Test
+    void mostrarListaClientesEntreFechas() throws IllegalPeriodException, NullListClientsException {
+
     }
 }
 
