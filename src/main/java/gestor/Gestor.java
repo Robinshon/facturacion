@@ -115,45 +115,45 @@ public class Gestor implements Serializable{
 
     }
     public Collection<Cliente> mostrarListaClientesEntreFechas(Calendar fechaInicio, Calendar fechaFin) throws IllegalPeriodException, NullListClientsException{
-        if(fechaInicio.after(fechaFin))
+        if(fechaInicio.after(fechaFin)) {
             throw new IllegalPeriodException();
-
+        }
         Collection<Cliente> clientes = this.clientes.values();
         clientes = listaEntreFechas(clientes, fechaInicio, fechaFin);
 
-        if(clientes.isEmpty())
+        if(clientes.isEmpty()){
             throw new NullListClientsException();
-
+        }
         return clientes;
     }
 
     public Collection<Llamada> mostrarListaLlamadasEntreFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws NullListCallException, IllegalPeriodException, NotExistingClientException{
-        if(fechaInicio.after(fechaFin))
+        if(fechaInicio.after(fechaFin)) {
             throw new IllegalPeriodException();
-
-        if(!clientes.containsKey(nif))
+        }
+        if(!clientes.containsKey(nif)) {
             throw new NotExistingClientException();
-
+        }
         Collection<Llamada> llamadas = clientes.get(nif).listaLlamadas();
         llamadas = listaEntreFechas(llamadas, fechaInicio, fechaFin);
-        if(llamadas.isEmpty())
+        if(llamadas.isEmpty()) {
             throw new NullListCallException();
-
+        }
         return llamadas;
     }
     public Collection<Factura> mostrarListaFacturasEntreFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws IllegalPeriodException, NotExistingClientException, NullListInvoicesException {
-        if(fechaInicio.after(fechaFin))
+        if(fechaInicio.after(fechaFin)) {
             throw new IllegalPeriodException();
-
-        if(!clientes.containsKey(nif))
+        }
+        if(!clientes.containsKey(nif)) {
             throw new NotExistingClientException();
-
+        }
         Collection<Factura> facturas = clientes.get(nif).listaFacturas().values();
         facturas = listaEntreFechas(facturas, fechaInicio, fechaFin);
 
-        if(facturas.isEmpty())
+        if(facturas.isEmpty()) {
             throw new NullListInvoicesException();
-
+        }
         return facturas;
     }
 
