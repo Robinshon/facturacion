@@ -9,7 +9,7 @@ public enum OpcionMenu {
     NUEVA_LLAMADA("Nueva llamada"),
     LISTADO_LLAMADAS("Listado llamadas"),
     NUEVA_FACTURA("Nueva Factura"),
-    DATOS_FACTURA("Datos factura"),
+    DATOS_FACTURA("Datos factura de un cliente"),
     MOSTRAR_FACTURAS("Mostrar lista facturas cliente"),
     FECHAS_ALTA_CLIENTE("Consultar listado de clientes que fueron dados de alta entre dos fechas"),
     FECHAS_LLAMADAS("Consultar listado de llamadas de un cliente que fueron realizadas entre dos fechas"),

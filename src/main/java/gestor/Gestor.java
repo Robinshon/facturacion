@@ -128,11 +128,11 @@ public class Gestor implements Serializable{
     }
 
     public Collection<Llamada> mostrarListaLlamadasEntreFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws NullListCallException, IllegalPeriodException, NotExistingClientException{
-        if(fechaInicio.after(fechaFin)) {
-            throw new IllegalPeriodException();
-        }
         if(!clientes.containsKey(nif)) {
             throw new NotExistingClientException();
+        }
+        if(fechaInicio.after(fechaFin)) {
+            throw new IllegalPeriodException();
         }
         Collection<Llamada> llamadas = clientes.get(nif).listaLlamadas();
         llamadas = listaEntreFechas(llamadas, fechaInicio, fechaFin);
@@ -142,11 +142,11 @@ public class Gestor implements Serializable{
         return llamadas;
     }
     public Collection<Factura> mostrarListaFacturasEntreFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws IllegalPeriodException, NotExistingClientException, NullListInvoicesException {
-        if(fechaInicio.after(fechaFin)) {
-            throw new IllegalPeriodException();
-        }
         if(!clientes.containsKey(nif)) {
             throw new NotExistingClientException();
+        }
+        if(fechaInicio.after(fechaFin)) {
+            throw new IllegalPeriodException();
         }
         Collection<Factura> facturas = clientes.get(nif).listaFacturas().values();
         facturas = listaEntreFechas(facturas, fechaInicio, fechaFin);
