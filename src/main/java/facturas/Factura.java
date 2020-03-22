@@ -27,9 +27,11 @@ public class Factura extends EntreFechas implements Serializable {
         return codigo;
     }
 
+    @Override
     public Calendar dameFecha(){
         return fechaEmision;
     }
+
     public String getFecha() {
         return fechaEmision.get(Calendar.DAY_OF_MONTH) + "#" + fechaEmision.get(Calendar.MONTH) + "#" + fechaEmision.get(Calendar.YEAR);
     }
@@ -48,6 +50,8 @@ public class Factura extends EntreFechas implements Serializable {
     public double getImporte() {
         return importe;
     }
+
+    @Override
     public String toString(){
         return "Codigo factura: " + getCodigo() + " / " + "Tarifa: " + tarifa.getPrecioPorSegundo() + " / " + "Fecha emision: " + getFecha() + " / " + "Fecha inicio: " + getFechaInicio() + " / " + "Fecha final: " + getFechaFin() + " / " + "Importe: " + getImporte();
     }

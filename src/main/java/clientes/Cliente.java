@@ -73,6 +73,7 @@ public abstract class Cliente extends EntreFechas implements Serializable {
         throw new NotExistingInvoceException();
     }
 
+    @Override
     public String toString(){
         return "Nombre: " + getNombre() + " / " + "NIF: " + getNIF() + " / " + "Direccion: " + direccion.toString() + " / " + "Fecha de alta: " + getFecha() + " / " + "Email: " + getEmail() + " / " + "Tarifa: " + tarifa.getPrecioPorSegundo() ;
     }
@@ -89,9 +90,11 @@ public abstract class Cliente extends EntreFechas implements Serializable {
         return email;
     }
 
+    @Override
     public Calendar dameFecha(){
         return fechaAlta;
     }
+
     public String getFecha() {
         return fechaAlta.get(Calendar.DAY_OF_MONTH) + "#" + fechaAlta.get(Calendar.MONTH) + "#" + fechaAlta.get(Calendar.YEAR);
     }

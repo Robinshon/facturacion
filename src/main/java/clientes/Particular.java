@@ -17,7 +17,6 @@ public class Particular extends Cliente implements Serializable {
     }
 
     @Override
-
     public String toString() {
         return "Nombre: " + super.getNombre() +  " / " + "Apellido: " + getApellido() + " / " + "NIF: " + super.getNIF() + " / " + "Direccion: " + super.getDireccion().toString() + " / " + "Fecha de alta: " + super.getFecha() + " / " + "Email: " + super.getEmail() + " / " + "Tarifa: " + super.getTarifa().getPrecioPorSegundo() ;
 

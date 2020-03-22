@@ -14,6 +14,13 @@ import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
 public class Menu {
+
+    private static String input(String text) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(text);
+        return scanner.nextLine();
+    }
+
     public static void main(String [] args) throws NotExistingClientException, ExistingClientException, NullListCallException, NotExistingInvoceException, NullListClientsException, NullListInvoicesException, IllegalPeriodException, ExistingInvoiceException {
         Scanner scanner = new Scanner(System.in);
         Gestor gestor = new Gestor();
@@ -22,10 +29,10 @@ public class Menu {
         Set<Llamada> llamadas;
         HashMap<String, Factura> facturas;
         OpcionMenu opcionMenu;
+
         do {
             System.out.println(OpcionMenu.menu());
-            System.out.print("Elige una opción: ");
-            String opcion = scanner.nextLine();
+            String opcion = input("Elige una opcion");
             System.out.print("\n");
             opcionMenu = OpcionMenu.obtenerOpcion(Integer.parseInt(opcion));
             String nif, codigo;
@@ -33,28 +40,17 @@ public class Menu {
             int year, month, day, hour, minute, second, duracion, yearI, yearF, monthI, monthF, dayI, dayF;
             switch (opcionMenu) {
                 case DAR_DE_ALTA_CLIENTE:
-                    System.out.println("Nombre: ");
-                    String nombre = scanner.nextLine();
-                    System.out.println("Apellido(si es una cadena vacia es una empresa): ");
-                    String apellido = scanner.nextLine();
-                    System.out.println("NIF: ");
-                    nif = scanner.nextLine();
-                    System.out.println("Codigo postal: ");
-                    int cp = parseInt(scanner.nextLine());
-                    System.out.println("Provincia: ");
-                    String provincia = scanner.nextLine();
-                    System.out.println("Poblacion: ");
-                    String poblacion = scanner.nextLine();
-                    System.out.println("Email: ");
-                    String email = scanner.nextLine();
-                    System.out.println("Tarifa: ");
-                    tarifa = parseDouble(scanner.nextLine());
-                    System.out.println("Año: ");
-                    year = parseInt(scanner.nextLine());
-                    System.out.println("Mes: ");
-                    month = parseInt(scanner.nextLine());
-                    System.out.println("Dia: ");
-                    day = parseInt(scanner.nextLine());
+                    String nombre = input("Nombre: ");
+                    String apellido = input("Apellido(si es una cadena vacia es una empresa): ");
+                    nif = input("NIF: ");
+                    int cp = parseInt(input("Codigo postal: "));
+                    String provincia = input("Provincia: ");
+                    String poblacion = input("Poblacion: ");
+                    String email = input("Email: ");
+                    tarifa = parseDouble(input("Tarifa: "));
+                    year = parseInt(input("Año: "));
+                    month = parseInt(input("Mes: "));
+                    day = parseInt(input("Dia: "));
                     Cliente c;
                     if (apellido.equals("")) {
                         c = new Empresa(nombre, nif, new Direccion(cp, provincia, poblacion), email, new Tarifa(tarifa), new GregorianCalendar(year, month, day));
@@ -64,20 +60,16 @@ public class Menu {
                     gestor.addCliente(c);
                     break;
                 case BORRAR_CLIENTE:
-                    System.out.println("NIF: ");
-                    nif = scanner.nextLine();
+                    nif = input("NIF: ");
                     gestor.removeCliente(nif);
                     break;
                 case CAMBIAR_TARIFA:
-                    System.out.println("NIF: ");
-                    nif = scanner.nextLine();
-                    System.out.println("Nueva tarifa: ");
-                    tarifa = parseDouble(scanner.nextLine());
+                    nif = input("NIF: ");
+                    tarifa = parseDouble(input("Nueva tarifa: "));
                     gestor.setTarifa(nif, new Tarifa(tarifa));
                     break;
                 case DATOS_CLIENTE:
-                    System.out.println("NIF: ");
-                    nif = scanner.nextLine();
+                    nif = input("NIF: ");
                     System.out.println(gestor.listarDatos(nif) + "\n");
                     break;
                 case LISTA_CLIENTE:
@@ -88,121 +80,80 @@ public class Menu {
                     System.out.println();
                     break;
                 case NUEVA_LLAMADA:
-                    System.out.println("NIF: ");
-                    nif = scanner.nextLine();
-                    System.out.println("Telefono: ");
-                    String telefono = scanner.nextLine();
-                    System.out.println("Año: ");
-                    year = parseInt(scanner.nextLine());
-                    System.out.println("Mes: ");
-                    month = parseInt(scanner.nextLine());
-                    System.out.println("Dia: ");
-                    day = parseInt(scanner.nextLine());
-                    System.out.println("Hora: ");
-                    hour = parseInt(scanner.nextLine());
-                    System.out.println("Minutos: ");
-                    minute = parseInt(scanner.nextLine());
-                    System.out.println("Segundos: ");
-                    second = parseInt(scanner.nextLine());
-                    System.out.println("Duracion llamada en segundos: ");
-                    duracion = parseInt(scanner.nextLine());
+                    nif = input("NIF: ");
+                    String telefono = input("Telefono: ");
+                    year = parseInt(input("Año: "));
+                    month = parseInt(input("Mes: "));
+                    day = parseInt(input("Dia: "));
+                    hour = parseInt(input("Hora: "));
+                    minute = parseInt(input("Minutos: "));
+                    second = parseInt(input("Segundos: "));
+                    duracion = parseInt(input("Duracion llamada en segundos: "));
                     gestor.addLlamada(new Llamada(telefono, new GregorianCalendar(year, month, day, hour, minute, second), duracion), nif);
                     break;
                 case LISTADO_LLAMADAS:
-                    System.out.println("NIF: ");
-                    nif = scanner.nextLine();
+                    nif = input("NIF: ");
                     llamadas = gestor.listaLlamadas(nif);
                     for (Llamada llamada : llamadas) {
                         System.out.println(llamada.toString());
                     }
                     break;
                 case NUEVA_FACTURA:
-                    System.out.println("NIF: ");
-                    nif = scanner.nextLine();
-                    System.out.println("Codigo: ");
-                    codigo = scanner.nextLine();
-                    System.out.println("Año inicio: ");
-                    yearI = parseInt(scanner.nextLine());
-                    System.out.println("Mes inicio: ");
-                    monthI = parseInt(scanner.nextLine());
-                    System.out.println("Dia inicio: ");
-                    dayI = parseInt(scanner.nextLine());
-                    System.out.println("Año final: ");
-                    yearF = parseInt(scanner.nextLine());
-                    System.out.println("Mes final: ");
-                    monthF = parseInt(scanner.nextLine());
-                    System.out.println("Dia final: ");
-                    dayF = parseInt(scanner.nextLine());
+                    nif = input("NIF: ");
+                    codigo = input("Codigo: ");
+                    yearI = parseInt(input("Año inicio: "));
+                    monthI = parseInt(input("Mes inicio: "));
+                    dayI = parseInt(input("Dia inicio: "));
+                    yearF = parseInt(input("Año final: "));
+                    monthF = parseInt(input("Mes final: "));
+                    dayF = parseInt(input("Dia final: "));
                     gestor.emitirFactura(codigo, nif, new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
                     break;
                 case DATOS_FACTURA:
-                    System.out.println("NIF: ");
-                    nif = scanner.nextLine();
-                    System.out.println("Codigo: ");
-                    codigo = scanner.nextLine();
+                    nif = input("NIF: ");
+                    codigo = input("Codigo: ");
                     System.out.println(gestor.facturaDatos(nif, codigo));
                     break;
                 case MOSTRAR_FACTURAS:
-                    System.out.println("NIF: ");
-                    nif = scanner.nextLine();
+                    nif = input("NIF: ");
                     facturas = gestor.listaFacturas(nif);
                     for (String factura : facturas.keySet()) {
                         System.out.println(facturas.get(factura).toString());
                     }
                     break;
                 case FECHAS_ALTA_CLIENTE:
-                    System.out.println("Año inicio: ");
-                    yearI = parseInt(scanner.nextLine());
-                    System.out.println("Mes inicio: ");
-                    monthI = parseInt(scanner.nextLine());
-                    System.out.println("Dia inicio: ");
-                    dayI = parseInt(scanner.nextLine());
-                    System.out.println("Año final: ");
-                    yearF = parseInt(scanner.nextLine());
-                    System.out.println("Mes final: ");
-                    monthF = parseInt(scanner.nextLine());
-                    System.out.println("Dia final: ");
-                    dayF = parseInt(scanner.nextLine());
+                    yearI = parseInt(input("Año inicio: "));
+                    monthI = parseInt(input("Mes inicio: "));
+                    dayI = parseInt(input("Dia inicio: "));
+                    yearF = parseInt(input("Año final: "));
+                    monthF = parseInt(input("Mes final: "));
+                    dayF = parseInt(input("Dia final: "));
                     Collection<Cliente> listaClientes = gestor.mostrarListaClientesEntreFechas(new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
                     for(Cliente cliente : listaClientes){
                         System.out.println(cliente.toString());
                     }
                     break;
                 case FECHAS_LLAMADAS:
-                    System.out.println("NIF: ");
-                    nif = scanner.nextLine();
-                    System.out.println("Año inicio: ");
-                    yearI = parseInt(scanner.nextLine());
-                    System.out.println("Mes inicio: ");
-                    monthI = parseInt(scanner.nextLine());
-                    System.out.println("Dia inicio: ");
-                    dayI = parseInt(scanner.nextLine());
-                    System.out.println("Año final: ");
-                    yearF = parseInt(scanner.nextLine());
-                    System.out.println("Mes final: ");
-                    monthF = parseInt(scanner.nextLine());
-                    System.out.println("Dia final: ");
-                    dayF = parseInt(scanner.nextLine());
+                    nif = input("NIF: ");
+                    yearI = parseInt(input("Año inicio: "));
+                    monthI = parseInt(input("Mes inicio: "));
+                    dayI = parseInt(input("Dia inicio: "));
+                    yearF = parseInt(input("Año final: "));
+                    monthF = parseInt(input("Mes final: "));
+                    dayF = parseInt(input("Dia final: "));
                     Collection<Llamada> listaLlamadas = gestor.mostrarListaLlamadasEntreFechas(nif,new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
                     for(Llamada llamada : listaLlamadas){
                         System.out.println(llamada.toString());
                     }
                     break;
                 case FECHAS_FACTURAS:
-                    System.out.println("NIF: ");
-                    nif = scanner.nextLine();
-                    System.out.println("Año inicio: ");
-                    yearI = parseInt(scanner.nextLine());
-                    System.out.println("Mes inicio: ");
-                    monthI = parseInt(scanner.nextLine());
-                    System.out.println("Dia inicio: ");
-                    dayI = parseInt(scanner.nextLine());
-                    System.out.println("Año final: ");
-                    yearF = parseInt(scanner.nextLine());
-                    System.out.println("Mes final: ");
-                    monthF = parseInt(scanner.nextLine());
-                    System.out.println("Dia final: ");
-                    dayF = parseInt(scanner.nextLine());
+                    nif = input("NIF: ");
+                    yearI = parseInt(input("Año inicio: "));
+                    monthI = parseInt(input("Mes inicio: "));
+                    dayI = parseInt(input("Dia inicio: "));
+                    yearF = parseInt(input("Año final: "));
+                    monthF = parseInt(input("Mes final: "));
+                    dayF = parseInt(input("Dia final: "));
                     Collection<Factura> listaFacturas = gestor.mostrarListaFacturasEntreFechas(nif,new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
                     for(Factura factura: listaFacturas){
                         System.out.println(factura.toString());

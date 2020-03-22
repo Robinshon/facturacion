@@ -44,6 +44,7 @@ public class Gestor implements Serializable{
         }
         throw new NotExistingClientException();
     }
+
     public String listarDatos(String nif) throws NotExistingClientException {
         if(clientes.containsKey(nif)){
             Cliente cliente = clientes.get(nif);
@@ -52,12 +53,14 @@ public class Gestor implements Serializable{
         throw new NotExistingClientException();
 
     }
+
     public HashMap<String,Cliente> listaClientes() throws NullListClientsException {
         if(clientes.isEmpty()){
             throw new NullListClientsException();
         }
         return clientes;
     }
+
 
     public boolean addLlamada(Llamada llamada, String nif) throws NotExistingClientException{
         if(clientes.containsKey(nif)){
@@ -68,6 +71,7 @@ public class Gestor implements Serializable{
 
 
     }
+
     public Set<Llamada> listaLlamadas(String nif) throws NotExistingClientException, NullListCallException {
         if(clientes.containsKey(nif)){
             Cliente cliente = clientes.get(nif);
@@ -78,6 +82,8 @@ public class Gestor implements Serializable{
         }
         throw new NotExistingClientException();
     }
+
+
     public boolean emitirFactura(String codigo, String nif, Calendar fechaInicio, Calendar fechaFin) throws NotExistingClientException, IllegalPeriodException, ExistingInvoiceException {
         if(fechaInicio.after(fechaFin)){
             throw new IllegalPeriodException();
@@ -89,7 +95,8 @@ public class Gestor implements Serializable{
         if(clientes.get(nif).estaFactura(codigo)){
             throw new ExistingInvoiceException();
         }
-        Factura newFactura = null;
+
+        Factura newFactura;
         double importe = 0.0;
         Set<Llamada> llamadasRango;
         Cliente cliente = clientes.get(nif);
@@ -103,6 +110,7 @@ public class Gestor implements Serializable{
         }
         return false;
     }
+
     public String facturaDatos(String nif, String codigo) throws NotExistingClientException, NotExistingInvoceException {
         if(clientes.containsKey(nif)){
             Cliente cliente = clientes.get(nif);
@@ -119,6 +127,8 @@ public class Gestor implements Serializable{
         throw new NotExistingClientException();
 
     }
+
+
     public Collection<Cliente> mostrarListaClientesEntreFechas(Calendar fechaInicio, Calendar fechaFin) throws IllegalPeriodException, NullListClientsException{
         if(fechaInicio.after(fechaFin)) {
             throw new IllegalPeriodException();
@@ -146,6 +156,7 @@ public class Gestor implements Serializable{
         }
         return llamadas;
     }
+
     public Collection<Factura> mostrarListaFacturasEntreFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws IllegalPeriodException, NotExistingClientException, NullListInvoicesException {
         if(!clientes.containsKey(nif)) {
             throw new NotExistingClientException();
@@ -165,8 +176,8 @@ public class Gestor implements Serializable{
 
 
     public void guardarDatos(){
-        FileOutputStream archive = null;
-        ObjectOutputStream object = null;
+        FileOutputStream archive;
+        ObjectOutputStream object;
         try {
             archive = new FileOutputStream("data/clientes.bin");
             object = new ObjectOutputStream(archive);
@@ -179,8 +190,8 @@ public class Gestor implements Serializable{
     }
 
     public void cargarDatos(){
-        FileInputStream archive = null;
-        ObjectInputStream object = null;
+        FileInputStream archive;
+        ObjectInputStream object;
         try {
             archive = new FileInputStream("data/clientes.bin");
             object = new ObjectInputStream(archive);

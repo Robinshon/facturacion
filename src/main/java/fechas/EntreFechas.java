@@ -6,12 +6,9 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class EntreFechas {
+public abstract class EntreFechas {
 
-    private Calendar fecha;
-    public Calendar dameFecha() {
-        return this.fecha;
-    }
+    public abstract Calendar dameFecha();
 
     public static <T extends EntreFechas> Collection<T> listaEntreFechas(Collection<T> datos, Calendar fechaInicio, Calendar fechaFin) throws IllegalPeriodException {
         if(fechaInicio.after(fechaFin)) {

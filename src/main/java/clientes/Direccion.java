@@ -26,6 +26,8 @@ public class Direccion implements Serializable {
     public String getPoblacion() {
         return poblacion;
     }
+
+    @Override
     public String toString(){
         return "Codigo postal: " + getCodPostal() + " / " + "Provincia: " + getProvincia() + " / " + "Poblacion: " + getPoblacion();
     }
