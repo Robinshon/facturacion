@@ -64,7 +64,7 @@ class GestorTest {
 
 
     @Test
-    void addCliente() throws {
+    void addCliente() {
         try{
             assertTrue(gestor.addCliente(c));
             assertFalse(gestor.addCliente(c1));
