@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 
 public class Llamada extends EntreFechas implements Serializable {
+    private static final long serialVersionUID = 42L;
     private String telefono;
     private Calendar fechaYHora;
     private int duracion;

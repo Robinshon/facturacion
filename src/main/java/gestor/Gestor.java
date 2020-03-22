@@ -13,6 +13,7 @@ import static fechas.EntreFechas.*;
 
 
 public class Gestor implements Serializable{
+    private static final long serialVersionUID = 42L;
     private HashMap<String,Cliente> clientes;
     public Gestor(){
 
@@ -77,12 +78,16 @@ public class Gestor implements Serializable{
         }
         throw new NotExistingClientException();
     }
-    public boolean emitirFactura(String codigo, String nif, Calendar fechaInicio, Calendar fechaFin) throws NotExistingClientException, IllegalPeriodException{
+    public boolean emitirFactura(String codigo, String nif, Calendar fechaInicio, Calendar fechaFin) throws NotExistingClientException, IllegalPeriodException, ExistingInvoiceException {
         if(fechaInicio.after(fechaFin)){
             throw new IllegalPeriodException();
         }
         if(!clientes.containsKey(nif)){
             throw new NotExistingClientException();
+        }
+
+        if(clientes.get(nif).estaFactura(codigo)){
+            throw new ExistingInvoiceException();
         }
         Factura newFactura = null;
         double importe = 0.0;

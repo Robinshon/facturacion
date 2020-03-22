@@ -14,7 +14,7 @@ import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
 public class Menu {
-    public static void main(String [] args) throws NotExistingClientException, ExistingClientException, NullListCallException, NotExistingInvoceException, NullListClientsException, NullListInvoicesException, IllegalPeriodException {
+    public static void main(String [] args) throws NotExistingClientException, ExistingClientException, NullListCallException, NotExistingInvoceException, NullListClientsException, NullListInvoicesException, IllegalPeriodException, ExistingInvoiceException {
         Scanner scanner = new Scanner(System.in);
         Gestor gestor = new Gestor();
         gestor.cargarDatos();
@@ -25,13 +25,12 @@ public class Menu {
         do {
             System.out.println(OpcionMenu.menu());
             System.out.print("Elige una opción: ");
-            byte opcion = scanner.nextByte();
+            String opcion = scanner.nextLine();
             System.out.print("\n");
-            opcionMenu = OpcionMenu.obtenerOpcion(opcion);
+            opcionMenu = OpcionMenu.obtenerOpcion(Integer.parseInt(opcion));
             String nif, codigo;
             double tarifa;
             int year, month, day, hour, minute, second, duracion, yearI, yearF, monthI, monthF, dayI, dayF;
-            scanner.nextLine();
             switch (opcionMenu) {
                 case DAR_DE_ALTA_CLIENTE:
                     System.out.println("Nombre: ");

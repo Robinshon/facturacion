@@ -59,6 +59,13 @@ public abstract class Cliente extends EntreFechas implements Serializable {
         return facturas;
     }
 
+    public Boolean estaFactura(String codigo){
+        if(facturas.containsKey(codigo)){
+            return true;
+        }
+        return false;
+    }
+
     public Factura buscaFactura(String codigo) throws NotExistingInvoceException {
         if(facturas.containsKey(codigo)){
             return facturas.get(codigo);

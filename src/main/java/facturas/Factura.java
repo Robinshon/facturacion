@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 
 public class Factura extends EntreFechas implements Serializable {
+    private static final long serialVersionUID = 42L;
     private String codigo;
     private Tarifa tarifa;
     private Calendar fechaEmision;
@@ -48,7 +49,7 @@ public class Factura extends EntreFechas implements Serializable {
         return importe;
     }
     public String toString(){
-        return "Codigo factura: " + getCodigo() + " / " + "Tarifa: " + tarifa.getPrecioPorSegundo() + " / " + "Fecha emision: " + getFecha() + " / " + "Fecha inicio: " + getFecha() + " / " + "Fecha final: " + getFecha() + " / " + "Importe: " + getImporte();
+        return "Codigo factura: " + getCodigo() + " / " + "Tarifa: " + tarifa.getPrecioPorSegundo() + " / " + "Fecha emision: " + getFecha() + " / " + "Fecha inicio: " + getFechaInicio() + " / " + "Fecha final: " + getFechaFin() + " / " + "Importe: " + getImporte();
     }
 
 

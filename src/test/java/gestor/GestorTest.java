@@ -39,7 +39,7 @@ class GestorTest {
     Collection<Llamada> llamadas;
     Collection<Factura> facturas;
     @BeforeEach
-    public void prepara() throws ExistingClientException, NotExistingClientException, IllegalPeriodException {
+    public void prepara() throws ExistingClientException, NotExistingClientException, IllegalPeriodException, ExistingInvoiceException, NotExistingInvoceException {
         gestor.addCliente(c2);
         gestor.addCliente(c3);
         gestor.addCliente(c4);
@@ -118,7 +118,7 @@ class GestorTest {
 
 
     @Test
-    void emitirFactura() throws NotExistingClientException, IllegalPeriodException {
+    void emitirFactura() throws NotExistingClientException, IllegalPeriodException, ExistingInvoiceException {
         try{
             assertTrue(gestor.emitirFactura("1","x212323112",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1)));
             //si intentamos usar el mismo codigo para otra factura error
