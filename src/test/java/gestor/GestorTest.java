@@ -10,10 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tarifas.Tarifa;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.LinkedList;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,13 +30,14 @@ class GestorTest {
     Llamada llamada4 = new Llamada("642309113", new GregorianCalendar(2021, 1, 4, 12, 00, 00), 500);
     Factura factura = new Factura("1",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1),100);
     Factura factura2 = new Factura("2",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1),600);
-    Factura factura3 = new Factura("3",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1),200);
-    Factura factura4 = new Factura("4",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1),200);
+    Factura factura3 = new Factura("3",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1),600);
+    Factura factura4 = new Factura("4",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2021,10,1),1100);
+    Factura facturaEmitidaTarde = new Factura("5",tarifa2, new GregorianCalendar(2020,4,1), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,5,1),200);
     Collection<Cliente> clientes;
     Collection<Llamada> llamadas;
     Collection<Factura> facturas;
     @BeforeEach
-    public void prepara() throws ExistingClientException, NotExistingClientException, IllegalPeriodException, ExistingInvoiceException, NotExistingInvoceException {
+    public void prepara() throws ExistingClientException, NotExistingClientException, IllegalPeriodException, ExistingInvoiceException {
         gestor.addCliente(c2);
         gestor.addCliente(c3);
         gestor.addCliente(c4);
@@ -48,7 +46,7 @@ class GestorTest {
         gestor.addLlamada(llamada4,"x212323112");
         gestor.emitirFactura("2","x212323112",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1));
         gestor.emitirFactura("3","x212323112",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1));
-        gestor.emitirFactura("4","x212323112",new GregorianCalendar(2020,10,10),new GregorianCalendar(2021,10,1));
+        gestor.emitirFactura("4","x212323112",new GregorianCalendar(2019,10,10),new GregorianCalendar(2021,10,1));
         //se usara la lista para comprobar que lo esperado es igual que lo obtenido
         clientes = new LinkedList<Cliente>();
         clientes.add(c2);
@@ -59,6 +57,8 @@ class GestorTest {
         facturas = new LinkedList<Factura>();
         facturas.add(factura2);
         facturas.add(factura3);
+        facturas.add(factura4);
+
 
     }
 
@@ -161,10 +161,8 @@ class GestorTest {
     }
 
     @Test
-    void mostrarListaClientesEntreFechas() {
+    void mostrarListaClientesEntreFechas(){
         try{
-            //si no hay clientes dados de alta en esas fechas
-            assertTrue(gestor.mostrarListaClientesEntreFechas(new GregorianCalendar(2021,10,10),new GregorianCalendar(2022,2,1)).isEmpty());
             //si la lista tiene a c2 y c3
             assertTrue(gestor.mostrarListaClientesEntreFechas(new GregorianCalendar(2019,12,1),new GregorianCalendar(2020,3,1)).contains(c2));
             assertTrue(gestor.mostrarListaClientesEntreFechas(new GregorianCalendar(2019,12,1),new GregorianCalendar(2020,3,1)).contains(c3));
@@ -183,7 +181,6 @@ class GestorTest {
     @Test
     void mostrarListaLlamadasEntreFechas() {
         try{
-            assertTrue(gestor.mostrarListaLlamadasEntreFechas("x212323112",new GregorianCalendar(2022,2,1),new GregorianCalendar(2021,10,10)).isEmpty());
             assertTrue(gestor.mostrarListaLlamadasEntreFechas("x212323112",new GregorianCalendar(2019,12,1),new GregorianCalendar(2020,3,1)).contains(llamada2));
             assertTrue(gestor.mostrarListaLlamadasEntreFechas("x212323112",new GregorianCalendar(2019,12,1),new GregorianCalendar(2020,3,1)).contains(llamada3));
             assertFalse(gestor.mostrarListaLlamadasEntreFechas("x212323112",new GregorianCalendar(2019,12,10),new GregorianCalendar(2020,3,1)).contains(llamada4));
@@ -196,15 +193,22 @@ class GestorTest {
     @Test
     void mostrarListaFacturasEntreFechas() {
         try{
-            assertTrue(gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2022,2,1),new GregorianCalendar(2021,10,10)).isEmpty());
-            assertTrue(gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2019,1,1),new GregorianCalendar(2020,3,1)).contains(factura2));
-            assertTrue(gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2019,1,1),new GregorianCalendar(2020,3,1)).contains(factura3));
-            assertFalse(gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2019,1,10),new GregorianCalendar(2020,3,1)).contains(factura4));
-            assertEquals(gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2019,1,10),new GregorianCalendar(2020,3,1)),facturas);
+            //compruebo que los datos de las facturas concuerdan con lo esperado
+            assertTrue(gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2019,1,1),new GregorianCalendar(2020,3,1)).toString().contains(factura2.toString()));
+            assertTrue(gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2019,1,1),new GregorianCalendar(2020,3,1)).toString().contains(factura3.toString()));
+            assertTrue(gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2019,1,1),new GregorianCalendar(2020,3,1)).toString().contains(factura4.toString()));
+            assertFalse(gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2019,1,1),new GregorianCalendar(2020,3,1)).toString().contains(facturaEmitidaTarde.toString()));
+            assertEquals(gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2019,1,1),new GregorianCalendar(2020,3,1)).toString(),facturas.toString());
         }catch (IllegalPeriodException e){
-        }catch (NotExistingClientException e){
+
+        }catch(NotExistingClientException e){
+
         }catch (NullListInvoicesException e){
+
         }
+
+
+
     }
 }
 
