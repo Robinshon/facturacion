@@ -9,6 +9,7 @@ import java.util.*;
 import clientes.*;
 import llamadas.Llamada;
 import tarifas.Tarifa;
+import tarifas.TarifaFactory;
 
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
@@ -37,7 +38,8 @@ public class Menu {
             opcionMenu = OpcionMenu.obtenerOpcion(Integer.parseInt(opcion));
             String nif, codigo;
             double tarifa;
-            int year, month, day, hour, minute, second, duracion, yearI, yearF, monthI, monthF, dayI, dayF;
+            Tarifa tar;
+            int year, month, day, hour, minute, second, duracion, yearI, yearF, monthI, monthF, dayI, dayF ,tipo;
             switch (opcionMenu) {
                 case DAR_DE_ALTA_CLIENTE:
                     String nombre = input("Nombre: ");
@@ -47,15 +49,18 @@ public class Menu {
                     String provincia = input("Provincia: ");
                     String poblacion = input("Poblacion: ");
                     String email = input("Email: ");
-                    tarifa = parseDouble(input("Tarifa: "));
                     year = parseInt(input("Año: "));
                     month = parseInt(input("Mes: "));
                     day = parseInt(input("Dia: "));
                     Cliente c;
+                    tar = null;
+                    tipo = parseInt(input("Tipo de tarifa '0' Tarifa Basica '1' Tarifa Domingo '2' Tarifa Tardes"));
+                    tarifa = parseDouble(input("Tarifa precio por segundos: "));
+                    tar = TarifaFactory.crearTarifa(tipo, tar, tarifa);
                     if (apellido.equals("")) {
-                        c = new Empresa(nombre, nif, new Direccion(cp, provincia, poblacion), email, new Tarifa(tarifa), new GregorianCalendar(year, month, day));
+                        c = ClienteFactory.crearCliente(0,nombre,apellido,nif,new Direccion(cp,provincia,poblacion),email,tar,new GregorianCalendar(year, month, day));
                     } else {
-                        c = new Particular(nombre, apellido, nif, new Direccion(cp, provincia, poblacion), email, new Tarifa(tarifa), new GregorianCalendar(year, month, day));
+                        c = ClienteFactory.crearCliente(1,nombre,apellido,nif,new Direccion(cp,provincia,poblacion),email,tar,new GregorianCalendar(year, month, day));
                     }
                     gestor.addCliente(c);
                     break;
@@ -65,8 +70,11 @@ public class Menu {
                     break;
                 case CAMBIAR_TARIFA:
                     nif = input("NIF: ");
-                    tarifa = parseDouble(input("Nueva tarifa: "));
-                    gestor.setTarifa(nif, new Tarifa(tarifa));
+                    tar = null;
+                    tipo = parseInt(input("Tipo de tarifa '0' Tarifa Basica '1' Tarifa Domingo '2' Tarifa Tardes"));
+                    tarifa = parseDouble(input("Tarifa precio por segundos: "));
+                    tar = TarifaFactory.crearTarifa(tipo, tar, tarifa);
+                    gestor.setTarifa(nif, tar);
                     break;
                 case DATOS_CLIENTE:
                     nif = input("NIF: ");
