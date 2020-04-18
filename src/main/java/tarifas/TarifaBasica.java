@@ -11,6 +11,6 @@ public class TarifaBasica extends Tarifa {
 
     @Override
     public double calcularImporte(Llamada llamada) {
-        return llamada.getDuracion() * getPrecioPorSegundo()/60;
+        return llamada.getDuracion() * getPrecioPorMinuto()/60;
     }
 }

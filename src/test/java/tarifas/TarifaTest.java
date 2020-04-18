@@ -33,8 +33,10 @@ class TarifaTest {
 
     @Test
     public void testCalcularImporte() {
+        System.out.println(tarifa.calcularImporte(llamada2));
         tarifa = new TarifaDomingo(tarifa, 0);
         assertEquals(0,tarifa.calcularImporte(llamada));
+        System.out.println(tarifa.calcularImporte(llamada2));
         tarifa = new TarifaTarde(tarifa,3);
         assertEquals(30,tarifa.calcularImporte(llamada2));
     }

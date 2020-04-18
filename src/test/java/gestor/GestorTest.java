@@ -4,13 +4,11 @@ import excepciones.*;
 import facturas.Factura;
 import clientes.*;
 
-import gestor.Gestor;
 import llamadas.Llamada;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tarifas.Tarifa;
 import tarifas.TarifaBasica;
-import tarifas.TarifaFactory;
 
 import java.util.*;
 
@@ -97,7 +95,7 @@ class GestorTest {
     void setTarifa(){
         try{
             assertTrue(gestor.setTarifa("x212323112", tarifa));
-            assertEquals(gestor.listaClientes().get("x212323112").getTarifa().getPrecioPorSegundo(),tarifa.getPrecioPorSegundo());
+            assertEquals(gestor.listaClientes().get("x212323112").getTarifa().getPrecioPorMinuto(),tarifa.getPrecioPorMinuto());
 
         }catch (NotExistingClientException e){
 

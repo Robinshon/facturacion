@@ -53,7 +53,7 @@ public class Factura extends EntreFechas implements Serializable {
 
     @Override
     public String toString(){
-        return "Codigo factura: " + getCodigo() + " / " + "Tarifa: " + tarifa.getPrecioPorSegundo() + " / " + "Fecha emision: " + getFecha() + " / " + "Fecha inicio: " + getFechaInicio() + " / " + "Fecha final: " + getFechaFin() + " / " + "Importe: " + getImporte();
+        return "Codigo factura: " + getCodigo() + " / " + "Tarifa: " + tarifa.getPrecioPorMinuto() + " / " + "Fecha emision: " + getFecha() + " / " + "Fecha inicio: " + getFechaInicio() + " / " + "Fecha final: " + getFechaFin() + " / " + "Importe: " + getImporte();
     }
 
 

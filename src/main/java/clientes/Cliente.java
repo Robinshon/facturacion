@@ -75,7 +75,7 @@ public abstract class Cliente extends EntreFechas implements Serializable {
 
     @Override
     public String toString(){
-        return "Nombre: " + getNombre() + " / " + "NIF: " + getNIF() + " / " + "Direccion: " + direccion.toString() + " / " + "Fecha de alta: " + getFecha() + " / " + "Email: " + getEmail() + " / " + "Tarifa: " + tarifa.getPrecioPorSegundo() ;
+        return "Nombre: " + getNombre() + " / " + "NIF: " + getNIF() + " / " + "Direccion: " + direccion.toString() + " / " + "Fecha de alta: " + getFecha() + " / " + "Email: " + getEmail() + " / " + "Tarifa: " + tarifa.getPrecioPorMinuto() ;
     }
 
     public String getNombre() {
