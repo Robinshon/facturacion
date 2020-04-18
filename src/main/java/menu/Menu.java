@@ -25,7 +25,7 @@ public class Menu {
     public static void main(String [] args) throws NotExistingClientException, ExistingClientException, NullListCallException, NotExistingInvoceException, NullListClientsException, NullListInvoicesException, IllegalPeriodException, ExistingInvoiceException {
         Scanner scanner = new Scanner(System.in);
         Gestor gestor = new Gestor();
-        gestor.cargarDatos();
+        //gestor.cargarDatos();
         HashMap<String, Cliente> clientes;
         Set<Llamada> llamadas;
         HashMap<String, Factura> facturas;
@@ -71,9 +71,8 @@ public class Menu {
                 case CAMBIAR_TARIFA:
                     nif = input("NIF: ");
                     tar = null;
-                    tipo = parseInt(input("Tipo de tarifa '0' Tarifa Basica '1' Tarifa Domingo '2' Tarifa Tardes"));
                     tarifa = parseDouble(input("Tarifa precio por segundos: "));
-                    tar = TarifaFactory.crearTarifa(tipo, tar, tarifa);
+                    tar = TarifaFactory.crearTarifa(0, tar, tarifa);
                     gestor.setTarifa(nif, tar);
                     break;
                 case DATOS_CLIENTE:

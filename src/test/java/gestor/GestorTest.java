@@ -9,6 +9,8 @@ import llamadas.Llamada;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tarifas.Tarifa;
+import tarifas.TarifaBasica;
+import tarifas.TarifaFactory;
 
 import java.util.*;
 
@@ -17,13 +19,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class GestorTest {
 
     Gestor gestor = new Gestor();
-    Cliente c = new Particular("Pepe", "Sancho", "x212331", new Direccion(123, "Castellon", "Oropesa"), "hola@lo", new Tarifa(1), new GregorianCalendar(2019, 2, 20));
-    Cliente c1 = new Particular("Juancho", "Pepito", "x212331", new Direccion(121, "Castellon", "Benicassim"), "ha@lo", new Tarifa(1), new GregorianCalendar(2020, 1, 10));
-    Cliente c2 = new Particular("Pepe", "Sancho", "x212323112", new Direccion(123, "Castellon", "Oropesa"), "hola@lo", new Tarifa(1), new GregorianCalendar(2020, 1, 10));
-    Cliente c3 = new Particular("Robert", "Pan", "x5218849B", new Direccion(123, "Castellon", "Oropesa"), "hola@lo", new Tarifa(1), new GregorianCalendar(2020, 1, 20));
-    Cliente c4 = new Particular("Juan", "Pino", "12345678Q", new Direccion(123, "Castellon", "Oropesa"), "hola@lo", new Tarifa(1), new GregorianCalendar(2020, 6, 20));
-    Tarifa tarifa = new Tarifa(1);
-    Tarifa tarifa2 = new Tarifa(1);
+    Cliente c = new Particular("Pepe", "Sancho", "x212331", new Direccion(123, "Castellon", "Oropesa"), "hola@lo", new TarifaBasica(1), new GregorianCalendar(2019, 2, 20));
+    Cliente c1 = new Particular("Juancho", "Pepito", "x212331", new Direccion(121, "Castellon", "Benicassim"), "ha@lo", new TarifaBasica(1), new GregorianCalendar(2020, 1, 10));
+    Cliente c2 = new Particular("Pepe", "Sancho", "x212323112", new Direccion(123, "Castellon", "Oropesa"), "hola@lo", new TarifaBasica(1), new GregorianCalendar(2020, 1, 10));
+    Cliente c3 = new Particular("Robert", "Pan", "x5218849B", new Direccion(123, "Castellon", "Oropesa"), "hola@lo", new TarifaBasica(1), new GregorianCalendar(2020, 1, 20));
+    Cliente c4 = new Particular("Juan", "Pino", "12345678Q", new Direccion(123, "Castellon", "Oropesa"), "hola@lo", new TarifaBasica(1), new GregorianCalendar(2020, 6, 20));
+    Tarifa tarifa = new TarifaBasica(1);
+    Tarifa tarifa2 = new TarifaBasica(1);
     Llamada llamada = new Llamada("642609113", new GregorianCalendar(2020, 1, 2, 12, 00, 00), 200);
     Llamada llamada2 = new Llamada("642609113", new GregorianCalendar(2020, 1, 3, 12, 00, 00), 100);
     Llamada llamada3 = new Llamada("642309113", new GregorianCalendar(2020, 1, 4, 12, 00, 00), 500);
