@@ -54,9 +54,8 @@ public class Menu {
                     day = parseInt(input("Dia: "));
                     Cliente c;
                     tar = null;
-                    tipo = parseInt(input("Tipo de tarifa '0' Tarifa Basica '1' Tarifa Domingo '2' Tarifa Tardes"));
                     tarifa = parseDouble(input("Tarifa precio por segundos: "));
-                    tar = TarifaFactory.crearTarifa(tipo, tar, tarifa);
+                    tar = TarifaFactory.crearTarifa(0, tar, tarifa);
                     if (apellido.equals("")) {
                         c = ClienteFactory.crearCliente(0,nombre,apellido,nif,new Direccion(cp,provincia,poblacion),email,tar,new GregorianCalendar(year, month, day));
                     } else {
