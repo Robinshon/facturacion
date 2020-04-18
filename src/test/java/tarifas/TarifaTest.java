@@ -16,7 +16,7 @@ class TarifaTest {
     public void init() {
         Calendar fecha = Calendar.getInstance();
         fecha.set(Calendar.DAY_OF_WEEK,7);
-        llamada = new Llamada("655847852",fecha,500);
+        llamada = new Llamada("655847852",fecha,540);
         Calendar fecha2 = Calendar.getInstance();
         fecha2.set(Calendar.DAY_OF_WEEK,1);
         fecha2.set(Calendar.HOUR_OF_DAY,17);
