@@ -25,7 +25,7 @@ public class Menu {
     public static void main(String [] args) throws NotExistingClientException, ExistingClientException, NullListCallException, NotExistingInvoceException, NullListClientsException, NullListInvoicesException, IllegalPeriodException, ExistingInvoiceException {
         Scanner scanner = new Scanner(System.in);
         Gestor gestor = new Gestor();
-        //gestor.cargarDatos();
+        gestor.cargarDatos();
         HashMap<String, Cliente> clientes;
         Set<Llamada> llamadas;
         HashMap<String, Factura> facturas;
@@ -38,8 +38,10 @@ public class Menu {
             opcionMenu = OpcionMenu.obtenerOpcion(Integer.parseInt(opcion));
             String nif, codigo;
             double tarifa;
+            String tarifaDomingos;
+            String tarifaTardes;
             Tarifa tar;
-            int year, month, day, hour, minute, second, duracion, yearI, yearF, monthI, monthF, dayI, dayF ,tipo;
+            int year, month, day, hour, minute, second, duracion, yearI, yearF, monthI, monthF, dayI, dayF;
             switch (opcionMenu) {
                 case DAR_DE_ALTA_CLIENTE:
                     String nombre = input("Nombre: ");
@@ -51,11 +53,20 @@ public class Menu {
                     String email = input("Email: ");
                     year = parseInt(input("Año: "));
                     month = parseInt(input("Mes: "));
+                    month -= 1; //Porque queremos que el mes 1 sea Enero y en GregorianCalendar Enero es el mes 0.
                     day = parseInt(input("Dia: "));
                     Cliente c;
                     tar = null;
-                    tarifa = parseDouble(input("Tarifa precio por segundos: "));
+                    tarifa = parseDouble(input("Precio por minutos de la tarifa básica: "));
+                    tarifaDomingos = input("Precio por minutos de la tarifa los domings(si es una cadena vacía no tiene tarifa especial los domingos): ");
+                    tarifaTardes = input("Precio por minutos de la tarifa por la tarde(si es una cadena vacía no tiene tarifa especial por la tarde): ");
                     tar = TarifaFactory.crearTarifa(0, tar, tarifa);
+                    if (!tarifaDomingos.equals("")) {
+                        tar = TarifaFactory.crearTarifa(1, tar, parseDouble(tarifaDomingos));
+                    }
+                    if (!tarifaTardes.equals("")) {
+                        tar = TarifaFactory.crearTarifa(2, tar, parseDouble(tarifaTardes));
+                    }
                     if (apellido.equals("")) {
                         c = ClienteFactory.crearCliente(ClienteFactory.EMPRESA,nombre,apellido,nif,new Direccion(cp,provincia,poblacion),email,tar,new GregorianCalendar(year, month, day));
                     } else {
@@ -71,7 +82,15 @@ public class Menu {
                     nif = input("NIF: ");
                     tar = null;
                     tarifa = parseDouble(input("Tarifa precio por segundos: "));
+                    tarifaDomingos = input("Precio por minutos de la tarifa los domings(si es una cadena vacía no tiene tarifa especial los domingos): ");
+                    tarifaTardes = input("Precio por minutos de la tarifa por la tarde(si es una cadena vacía no tiene tarifa especial por la tarde): ");
                     tar = TarifaFactory.crearTarifa(0, tar, tarifa);
+                    if (tarifaDomingos.equals("")) {
+                        tar = TarifaFactory.crearTarifa(1, tar, parseDouble(tarifaDomingos));
+                    }
+                    if (tarifaTardes.equals("")) {
+                        tar = TarifaFactory.crearTarifa(2, tar, parseDouble(tarifaTardes));
+                    }
                     gestor.setTarifa(nif, tar);
                     break;
                 case DATOS_CLIENTE:
@@ -90,6 +109,7 @@ public class Menu {
                     String telefono = input("Telefono: ");
                     year = parseInt(input("Año: "));
                     month = parseInt(input("Mes: "));
+                    month -= 1; //Porque queremos que el mes 1 sea Enero y en GregorianCalendar Enero es el mes 0.
                     day = parseInt(input("Dia: "));
                     hour = parseInt(input("Hora: "));
                     minute = parseInt(input("Minutos: "));
@@ -109,9 +129,11 @@ public class Menu {
                     codigo = input("Codigo: ");
                     yearI = parseInt(input("Año inicio: "));
                     monthI = parseInt(input("Mes inicio: "));
+                    monthI -= 1; //Porque queremos que el mes 1 sea Enero y en GregorianCalendar Enero es el mes 0.
                     dayI = parseInt(input("Dia inicio: "));
                     yearF = parseInt(input("Año final: "));
                     monthF = parseInt(input("Mes final: "));
+                    monthF -= 1; //Porque queremos que el mes 1 sea Enero y en GregorianCalendar Enero es el mes 0.
                     dayF = parseInt(input("Dia final: "));
                     gestor.emitirFactura(codigo, nif, new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
                     break;
@@ -130,9 +152,11 @@ public class Menu {
                 case FECHAS_ALTA_CLIENTE:
                     yearI = parseInt(input("Año inicio: "));
                     monthI = parseInt(input("Mes inicio: "));
+                    monthI -= 1; //Porque queremos que el mes 1 sea Enero y en GregorianCalendar Enero es el mes 0.
                     dayI = parseInt(input("Dia inicio: "));
                     yearF = parseInt(input("Año final: "));
                     monthF = parseInt(input("Mes final: "));
+                    monthF -= 1; //Porque queremos que el mes 1 sea Enero y en GregorianCalendar Enero es el mes 0.
                     dayF = parseInt(input("Dia final: "));
                     Collection<Cliente> listaClientes = gestor.mostrarListaClientesEntreFechas(new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
                     for(Cliente cliente : listaClientes){
@@ -143,9 +167,11 @@ public class Menu {
                     nif = input("NIF: ");
                     yearI = parseInt(input("Año inicio: "));
                     monthI = parseInt(input("Mes inicio: "));
+                    monthI -= 1; //Porque queremos que el mes 1 sea Enero y en GregorianCalendar Enero es el mes 0.
                     dayI = parseInt(input("Dia inicio: "));
                     yearF = parseInt(input("Año final: "));
                     monthF = parseInt(input("Mes final: "));
+                    monthF -= 1; //Porque queremos que el mes 1 sea Enero y en GregorianCalendar Enero es el mes 0.
                     dayF = parseInt(input("Dia final: "));
                     Collection<Llamada> listaLlamadas = gestor.mostrarListaLlamadasEntreFechas(nif,new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
                     for(Llamada llamada : listaLlamadas){
@@ -156,9 +182,11 @@ public class Menu {
                     nif = input("NIF: ");
                     yearI = parseInt(input("Año inicio: "));
                     monthI = parseInt(input("Mes inicio: "));
+                    monthI -= 1; //Porque queremos que el mes 1 sea Enero y en GregorianCalendar Enero es el mes 0.
                     dayI = parseInt(input("Dia inicio: "));
                     yearF = parseInt(input("Año final: "));
                     monthF = parseInt(input("Mes final: "));
+                    monthF -= 1; //Porque queremos que Enero sea el mes 1 y en GregorianCalendar Enero es el mes 0.
                     dayF = parseInt(input("Dia final: "));
                     Collection<Factura> listaFacturas = gestor.mostrarListaFacturasEntreFechas(nif,new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
                     for(Factura factura: listaFacturas){

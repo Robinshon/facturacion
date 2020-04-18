@@ -9,6 +9,10 @@ public class TarifaBasica extends Tarifa {
         super(precioPorMinuto);
     }
 
+    public String descripcion() {
+        return "Básica " + getPrecioPorMinuto();
+    }
+
     @Override
     public double calcularImporte(Llamada llamada) {
         return llamada.getDuracion() * getPrecioPorMinuto()/60;

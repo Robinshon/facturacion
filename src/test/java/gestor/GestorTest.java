@@ -24,14 +24,14 @@ class GestorTest {
     Cliente c4 = new Particular("Juan", "Pino", "12345678Q", new Direccion(123, "Castellon", "Oropesa"), "hola@lo", new TarifaBasica(1), new GregorianCalendar(2020, 6, 20));
     Tarifa tarifa = new TarifaBasica(1);
     Tarifa tarifa2 = new TarifaBasica(1);
-    Llamada llamada = new Llamada("642609113", new GregorianCalendar(2020, 1, 2, 12, 00, 00), 200);
+    Llamada llamada = new Llamada( "642609113", new GregorianCalendar(2020, 1, 2, 12, 00, 00), 200);
     Llamada llamada2 = new Llamada("642609113", new GregorianCalendar(2020, 1, 3, 12, 00, 00), 100);
     Llamada llamada3 = new Llamada("642309113", new GregorianCalendar(2020, 1, 4, 12, 00, 00), 500);
-    Llamada llamada4 = new Llamada("642309113", new GregorianCalendar(2021, 1, 4, 12, 00, 00), 500);
-    Factura factura = new Factura("1",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1),600);
-    Factura factura2 = new Factura("2",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1),600);
-    Factura factura3 = new Factura("3",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1),600);
-    Factura factura4 = new Factura("4",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2021,10,1),1100);
+    Llamada llamada4 = new Llamada("642309113", new GregorianCalendar(2021, 1, 4, 12, 00, 00), 600);
+    Factura factura = new Factura("1",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1),10);
+    Factura factura2 = new Factura("2",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1),10);
+    Factura factura3 = new Factura("3",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1),10);
+    Factura factura4 = new Factura("4",tarifa2, Calendar.getInstance(), new GregorianCalendar(2019,10,10),new GregorianCalendar(2021,10,1),20);
     Factura facturaEmitidaTarde = new Factura("5",tarifa2, new GregorianCalendar(2020,4,1), new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,5,1),200);
 
     Collection<Cliente> clientes;
@@ -186,7 +186,7 @@ class GestorTest {
             assertTrue(gestor.mostrarListaLlamadasEntreFechas("x212323112",new GregorianCalendar(2019,12,1),new GregorianCalendar(2020,3,1)).contains(llamada2));
             assertTrue(gestor.mostrarListaLlamadasEntreFechas("x212323112",new GregorianCalendar(2019,12,1),new GregorianCalendar(2020,3,1)).contains(llamada3));
             assertFalse(gestor.mostrarListaLlamadasEntreFechas("x212323112",new GregorianCalendar(2019,12,10),new GregorianCalendar(2020,3,1)).contains(llamada4));
-            assertEquals(gestor.mostrarListaLlamadasEntreFechas("x212323112",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1)),llamadas);
+            assertTrue(gestor.mostrarListaLlamadasEntreFechas("x212323112",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1)).containsAll(llamadas));
         }catch (IllegalPeriodException e){
         }catch (NotExistingClientException e) {
         }catch (NullListCallException e) {

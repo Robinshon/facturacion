@@ -19,4 +19,9 @@ public class TarifaTarde extends TarifaExtra{
         return super.calcularImporte(llamada);
     }
 
+    @Override
+    public String descripcion() {
+        return super.descripcion() + ", Tarde " + getPrecioPorMinuto();
+    }
+
 }

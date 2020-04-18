@@ -19,4 +19,8 @@ public class TarifaDomingo extends TarifaExtra{
         }
         return super.calcularImporte(llamada);
     }
+    @Override
+    public String descripcion() {
+        return super.descripcion() + ", Domingo " + getPrecioPorMinuto();
+    }
 }

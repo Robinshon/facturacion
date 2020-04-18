@@ -17,6 +17,7 @@ public abstract class Tarifa implements Serializable {
     public double getPrecioPorMinuto() {
         return precioPorMinuto;
     }
+    public abstract String descripcion();
     public void setPrecioPorMinuto(double precioPorMinuto) {
         this.precioPorMinuto = precioPorMinuto;
     }

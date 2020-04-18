@@ -7,11 +7,15 @@ public abstract class TarifaExtra extends TarifaBasica {
     public TarifaExtra(Tarifa tarifa, double importeExtra) {
         super(importeExtra);
         this.base = tarifa;
-        System.out.println(base.getClass());
     }
     @Override
     public double calcularImporte(Llamada llamada) {
         return base.calcularImporte(llamada);
+    }
+
+    @Override
+    public String descripcion() {
+        return base.descripcion();
     }
 
 }

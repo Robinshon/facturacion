@@ -103,7 +103,8 @@ public class Gestor implements Serializable{
         if(cliente != null){
             llamadasRango = cliente.llamadasRango(fechaInicio,fechaFin);
             for(Llamada llamada : llamadasRango){
-                importe += (llamada.getDuracion() * cliente.getTarifa().getPrecioPorMinuto());
+                System.out.println(cliente.getTarifa().getClass());
+                importe += cliente.getTarifa().calcularImporte(llamada);
             }
             newFactura = new Factura(codigo,cliente.getTarifa(),Calendar.getInstance(),fechaInicio,fechaFin,importe);
             return cliente.addFactura(newFactura);
