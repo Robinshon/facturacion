@@ -10,7 +10,7 @@ public abstract class TarifaExtra extends TarifaBasica {
     }
     @Override
     public double calcularImporte(Llamada llamada) {
-        return llamada.getDuracion() * base.getPrecioPorSegundo()/60;
+        return llamada.getDuracion() * base.getPrecioPorMinuto()/60;
     }
 
 }

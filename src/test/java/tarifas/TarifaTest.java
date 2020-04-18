@@ -10,7 +10,8 @@ class TarifaTest {
 
     Llamada llamada;
     Llamada llamada2;
-    TarifaBasica tarifa;
+    TarifaBasica base;
+    Tarifa tarifa;
 
     @BeforeEach
     public void init() {
@@ -21,24 +22,25 @@ class TarifaTest {
         fecha2.set(Calendar.DAY_OF_WEEK,2);
         fecha2.set(Calendar.HOUR_OF_DAY,17);
         llamada2 = new Llamada("666445874",fecha2,600);
-        tarifa = new TarifaBasica(10);
+        base = new TarifaBasica(10);
     }
 
     @AfterEach
     public void finish() {
         llamada = null;
         llamada2 = null;
-        tarifa=null;
+        base = null;
     }
 
     @Test
     public void testCalcularImporte() {
-        tarifa = new TarifaDomingo(tarifa, 0);
+        tarifa = new TarifaDomingo(base, 0);
         assertEquals(100,tarifa.calcularImporte(llamada2));
         assertEquals(0,tarifa.calcularImporte(llamada));
-        System.out.println(tarifa.getPrecioPorSegundo());
-        tarifa = new TarifaTarde(tarifa,3);
-        //llamada.dameFecha().get(Calendar.HOUR) >= 16 && llamada.dameFecha().get(Calendar.HOUR) < 20 && importeBase < super.calcularImporte(llamada)
+        tarifa = new TarifaTarde(base,3);
         assertEquals(30,tarifa.calcularImporte(llamada2));
+        tarifa = new TarifaTarde(base,5);
+        assertEquals(50,tarifa.calcularImporte(llamada2));
+
     }
 }
