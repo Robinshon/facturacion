@@ -15,7 +15,7 @@ import tarifas.TarifaFactory;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+// TODO: Revisad en las traspas de teoría cómo se hacen pruebas para las excepciones
 class GestorTest {
 
     Gestor gestor = new Gestor();
@@ -65,7 +65,9 @@ class GestorTest {
 
     }
 
-
+    // TODO: No tiene sentido que haya dos catch, o esperáis una excepción o
+    // la otra. Y si esperáis una excepción debeís poner un fail si no se produce.
+    // Alternativamente, podéis usar assertThrows
     @Test
     void addCliente() {
         try{

@@ -21,7 +21,7 @@ public class Menu {
         System.out.println(text);
         return scanner.nextLine();
     }
-
+    // TODO: main no debe lanzar excepciones, tenéis que capturarlas con un try catch
     public static void main(String [] args) throws NotExistingClientException, ExistingClientException, NullListCallException, NotExistingInvoceException, NullListClientsException, NullListInvoicesException, IllegalPeriodException, ExistingInvoiceException {
         Scanner scanner = new Scanner(System.in);
         Gestor gestor = new Gestor();
@@ -30,7 +30,7 @@ public class Menu {
         Set<Llamada> llamadas;
         HashMap<String, Factura> facturas;
         OpcionMenu opcionMenu;
-
+        // TODO: Es mejor separar la lógica del menú, así es inmanejable
         do {
             System.out.println(OpcionMenu.menu());
             String opcion = input("Elige una opcion");
