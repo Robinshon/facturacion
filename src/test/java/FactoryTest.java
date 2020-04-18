@@ -61,15 +61,15 @@ class FactoryTest {
     public void testTarifa() {
         TarifaBasica tarifaB = null;
         tarifaB = (TarifaBasica) TarifaFactory.crearTarifa(0, tarifaB, 5);
-        assertEquals(tarifa.getPrecioPorSegundo(), tarifaB.getPrecioPorSegundo());
+        assertEquals(tarifa.getPrecioPorMinuto(), tarifaB.getPrecioPorMinuto());
 
         TarifaDomingo tarifaD = (TarifaDomingo) TarifaFactory.crearTarifa(1, tarifaB, 2);
         tarifa = new TarifaDomingo(tarifa, 2);
-        assertEquals(tarifa.getPrecioPorSegundo(), tarifaD.getPrecioPorSegundo());
+        assertEquals(tarifa.getPrecioPorMinuto(), tarifaD.getPrecioPorMinuto());
 
         TarifaTarde tarifaT = (TarifaTarde) TarifaFactory.crearTarifa(2, tarifaB, 3);
         tarifa = new TarifaTarde(tarifa, 3);
-        assertEquals(tarifa.getPrecioPorSegundo(), tarifaT.getPrecioPorSegundo());
+        assertEquals(tarifa.getPrecioPorMinuto(), tarifaT.getPrecioPorMinuto());
 
     }
 }
