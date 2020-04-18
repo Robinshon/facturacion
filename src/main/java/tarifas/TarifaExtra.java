@@ -3,7 +3,7 @@ package tarifas;
 import llamadas.Llamada;
 
 public abstract class TarifaExtra extends TarifaBasica {
-    private  Tarifa base;
+    private Tarifa base;
     public TarifaExtra(Tarifa tarifa, double importeExtra) {
         super(importeExtra);
         this.base = tarifa;
