@@ -5,9 +5,7 @@ import clientes.ClienteFactory;
 import clientes.Direccion;
 import clientes.Empresa;
 import clientes.Particular;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import tarifas.TarifaBasica;
 import tarifas.TarifaDomingo;
 import tarifas.TarifaFactory;
@@ -30,14 +28,14 @@ class FactoryTest {
     String apellidos = "Tenas";
 
 
-    @BeforeAll
+    @BeforeEach
     public void init() {
         empresa = new Empresa(nombre, nif, dir, correo, tarifa, fecha);
         particular = new Particular(nombre, apellidos, nif, dir, correo, tarifa, fecha);
 
     }
 
-    @AfterAll
+    @AfterEach
     public void finish() {
         empresa = null;
         particular = null;

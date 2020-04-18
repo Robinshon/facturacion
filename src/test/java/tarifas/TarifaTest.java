@@ -1,9 +1,8 @@
 package tarifas;
 
 import llamadas.Llamada;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
 import java.util.Calendar;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,7 +12,7 @@ class TarifaTest {
     Llamada llamada2;
     TarifaBasica tarifa;
 
-    @BeforeAll
+    @BeforeEach
     public void init() {
         Calendar fecha = Calendar.getInstance();
         fecha.set(Calendar.DAY_OF_WEEK,1);
@@ -31,7 +30,7 @@ class TarifaTest {
         tarifa = new TarifaBasica(10);
     }
 
-    @AfterAll
+    @AfterEach
     public void finish() {
         llamada = null;
         llamada2 = null;
@@ -41,8 +40,8 @@ class TarifaTest {
     @Test
     public void testCalcularImporte() {
         tarifa = new TarifaDomingo(tarifa, 0);
-        assertEquals(0,tarifa.calcularImporte(llamada), -1);
+        assertEquals(0,tarifa.calcularImporte(llamada));
         tarifa = new TarifaTarde(tarifa,5);
-        assertEquals(3000,tarifa.calcularImporte(llamada2),-1);
+        assertEquals(3000,tarifa.calcularImporte(llamada2));
     }
 }

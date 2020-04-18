@@ -13,7 +13,7 @@ public class TarifaDomingo extends TarifaExtra{
     public double calcularImporte(Llamada llamada) {
         double importeBase = llamada.getDuracion() * getPrecioPorSegundo()/60;
 
-        if(llamada.dameFecha().get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+        if(llamada.dameFecha().get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY && importeBase < super.calcularImporte(llamada))
             return importeBase;
         return super.calcularImporte(llamada);
     }
