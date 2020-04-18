@@ -96,7 +96,7 @@ public abstract class Cliente extends EntreFechas implements Serializable {
     }
 
     public String getFecha() {
-        return fechaAlta.get(Calendar.DAY_OF_MONTH) + "#" + fechaAlta.get(Calendar.MONTH) + "#" + fechaAlta.get(Calendar.YEAR);
+        return fechaAlta.get(Calendar.DAY_OF_MONTH) + "/" + (fechaAlta.get(Calendar.MONTH)+1) + "/" + fechaAlta.get(Calendar.YEAR);
     }
 
     public boolean setTarifa(Tarifa newTarifa){
