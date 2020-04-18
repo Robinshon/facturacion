@@ -6,6 +6,7 @@ import java.util.Calendar;
 
 public class TarifaDomingo extends TarifaExtra{
     private static final long serialVersionUID = 42L;
+
     public TarifaDomingo(Tarifa tarifa, double importeExtra) {
         super(tarifa,importeExtra);
     }
@@ -13,8 +14,9 @@ public class TarifaDomingo extends TarifaExtra{
     public double calcularImporte(Llamada llamada) {
         double importeBase = llamada.getDuracion() * getPrecioPorSegundo()/60;
 
-        if(llamada.dameFecha().get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY && importeBase < super.calcularImporte(llamada))
+        if(llamada.dameFecha().get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY && importeBase < super.calcularImporte(llamada)) {
             return importeBase;
+        }
         return super.calcularImporte(llamada);
     }
 }

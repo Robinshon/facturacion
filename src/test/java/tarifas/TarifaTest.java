@@ -15,10 +15,10 @@ class TarifaTest {
     @BeforeEach
     public void init() {
         Calendar fecha = Calendar.getInstance();
-        fecha.set(Calendar.DAY_OF_WEEK,7);
+        fecha.set(Calendar.DAY_OF_WEEK,1);
         llamada = new Llamada("655847852",fecha,500);
         Calendar fecha2 = Calendar.getInstance();
-        fecha2.set(Calendar.DAY_OF_WEEK,1);
+        fecha2.set(Calendar.DAY_OF_WEEK,2);
         fecha2.set(Calendar.HOUR_OF_DAY,17);
         llamada2 = new Llamada("666445874",fecha2,600);
         tarifa = new TarifaBasica(10);
@@ -34,8 +34,11 @@ class TarifaTest {
     @Test
     public void testCalcularImporte() {
         tarifa = new TarifaDomingo(tarifa, 0);
+        assertEquals(100,tarifa.calcularImporte(llamada2));
         assertEquals(0,tarifa.calcularImporte(llamada));
+        System.out.println(tarifa.getPrecioPorSegundo());
         tarifa = new TarifaTarde(tarifa,3);
+        //llamada.dameFecha().get(Calendar.HOUR) >= 16 && llamada.dameFecha().get(Calendar.HOUR) < 20 && importeBase < super.calcularImporte(llamada)
         assertEquals(30,tarifa.calcularImporte(llamada2));
     }
 }
