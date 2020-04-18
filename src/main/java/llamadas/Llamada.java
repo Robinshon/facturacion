@@ -26,7 +26,7 @@ public class Llamada extends EntreFechas implements Serializable {
     }
 
     public String getFecha(){
-        return fechaYHora.get(Calendar.DAY_OF_MONTH) + "/" + (fechaYHora.get(Calendar.MONTH)+1) + "/" + fechaYHora.get(Calendar.YEAR) + " " + fechaYHora.get(Calendar.HOUR_OF_DAY) + ":" +  fechaYHora.get(Calendar.MINUTE) + ":" + fechaYHora.get(Calendar.SECOND);
+        return fechaYHora.get(Calendar.DAY_OF_MONTH) + "#" + (fechaYHora.get(Calendar.MONTH)+1) + "#" + fechaYHora.get(Calendar.YEAR) + " " + fechaYHora.get(Calendar.HOUR_OF_DAY) + "#" +  fechaYHora.get(Calendar.MINUTE) + "#" + fechaYHora.get(Calendar.SECOND);
     }
     public String getTelefono() {
         return telefono;

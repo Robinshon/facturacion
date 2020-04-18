@@ -33,18 +33,18 @@ public class Factura extends EntreFechas implements Serializable {
     }
 
     public String getFecha() {
-        return fechaEmision.get(Calendar.DAY_OF_MONTH) + "/" + (fechaEmision.get(Calendar.MONTH)+1) + "/" + fechaEmision.get(Calendar.YEAR);
+        return fechaEmision.get(Calendar.DAY_OF_MONTH) + "#" + (fechaEmision.get(Calendar.MONTH)+1) + "#" + fechaEmision.get(Calendar.YEAR);
     }
 
 
 
     public String getFechaInicio() {
-        return fechaInicio.get(Calendar.DAY_OF_MONTH) + "/" + (fechaInicio.get(Calendar.MONTH)+1) + "/" + fechaInicio.get(Calendar.YEAR);
+        return fechaInicio.get(Calendar.DAY_OF_MONTH) + "#" + (fechaInicio.get(Calendar.MONTH)+1) + "#" + fechaInicio.get(Calendar.YEAR);
     }
 
 
     public String getFechaFin() {
-        return fechaFin.get(Calendar.DAY_OF_MONTH) + "/" + (fechaFin.get(Calendar.MONTH)+1) + "/" + fechaFin.get(Calendar.YEAR);
+        return fechaFin.get(Calendar.DAY_OF_MONTH) + "#" + (fechaFin.get(Calendar.MONTH)+1) + "#" + fechaFin.get(Calendar.YEAR);
     }
 
     public double getImporte() {
