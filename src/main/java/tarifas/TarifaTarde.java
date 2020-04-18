@@ -13,7 +13,7 @@ public class TarifaTarde extends TarifaExtra{
     public double calcularImporte(Llamada llamada){
         double importeBase = llamada.getDuracion() * getPrecioPorMinuto()/60;
 
-        if(llamada.dameFecha().get(Calendar.HOUR_OF_DAY) >= 16 && llamada.dameFecha().get(Calendar.HOUR) < 20 && importeBase < super.calcularImporte(llamada))
+        if(llamada.dameFecha().get(Calendar.HOUR_OF_DAY) >= 16 && llamada.dameFecha().get(Calendar.HOUR_OF_DAY) < 20 && importeBase < super.calcularImporte(llamada))
             return importeBase;
 
         return super.calcularImporte(llamada);
