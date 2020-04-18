@@ -57,9 +57,9 @@ public class Menu {
                     tarifa = parseDouble(input("Tarifa precio por segundos: "));
                     tar = TarifaFactory.crearTarifa(0, tar, tarifa);
                     if (apellido.equals("")) {
-                        c = ClienteFactory.crearCliente(0,nombre,apellido,nif,new Direccion(cp,provincia,poblacion),email,tar,new GregorianCalendar(year, month, day));
+                        c = ClienteFactory.crearCliente(ClienteFactory.EMPRESA,nombre,apellido,nif,new Direccion(cp,provincia,poblacion),email,tar,new GregorianCalendar(year, month, day));
                     } else {
-                        c = ClienteFactory.crearCliente(1,nombre,apellido,nif,new Direccion(cp,provincia,poblacion),email,tar,new GregorianCalendar(year, month, day));
+                        c = ClienteFactory.crearCliente(ClienteFactory.PARTICULAR,nombre,apellido,nif,new Direccion(cp,provincia,poblacion),email,tar,new GregorianCalendar(year, month, day));
                     }
                     gestor.addCliente(c);
                     break;

@@ -5,6 +5,8 @@ import tarifas.Tarifa;
 import java.util.Calendar;
 
 public class ClienteFactory {
+    public static int EMPRESA = 0;
+    public static int PARTICULAR = 1;
     public static Cliente crearCliente(int tipo, String nombre, String apellidos, String nif, Direccion dir, String correo, Tarifa tarifa, Calendar fecha) {
         Cliente cliente = null;
 
