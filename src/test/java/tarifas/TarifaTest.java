@@ -49,7 +49,6 @@ class TarifaTest {
     @Test void testTodasPrimeroDomigo() {
         tarifa = new TarifaDomingo(base,0);
         tarifa = new TarifaTarde(tarifa, 3);
-        System.out.println(tarifa.getClass());
         assertEquals(30,tarifa.calcularImporte(llamada2));
         assertEquals(0,tarifa.calcularImporte(llamada));
     }

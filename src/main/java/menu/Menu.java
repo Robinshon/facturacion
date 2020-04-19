@@ -81,14 +81,14 @@ public class Menu {
                 case CAMBIAR_TARIFA:
                     nif = input("NIF: ");
                     tar = null;
-                    tarifa = parseDouble(input("Tarifa precio por segundos: "));
+                    tarifa = parseDouble(input("Precio por minutos de la tarifa básica: "));
                     tarifaDomingos = input("Precio por minutos de la tarifa los domings(si es una cadena vacía no tiene tarifa especial los domingos): ");
                     tarifaTardes = input("Precio por minutos de la tarifa por la tarde(si es una cadena vacía no tiene tarifa especial por la tarde): ");
                     tar = TarifaFactory.crearTarifa(0, tar, tarifa);
-                    if (tarifaDomingos.equals("")) {
+                    if (!tarifaDomingos.equals("")) {
                         tar = TarifaFactory.crearTarifa(1, tar, parseDouble(tarifaDomingos));
                     }
-                    if (tarifaTardes.equals("")) {
+                    if (!tarifaTardes.equals("")) {
                         tar = TarifaFactory.crearTarifa(2, tar, parseDouble(tarifaTardes));
                     }
                     gestor.setTarifa(nif, tar);
