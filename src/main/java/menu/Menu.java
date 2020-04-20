@@ -58,7 +58,7 @@ public class Menu {
                     Cliente c;
                     tar = null;
                     tarifa = parseDouble(input("Precio por minutos de la tarifa básica: "));
-                    tarifaDomingos = input("Precio por minutos de la tarifa los domings(si es una cadena vacía no tiene tarifa especial los domingos): ");
+                    tarifaDomingos = input("Precio por minutos de la tarifa los domingos(si es una cadena vacía no tiene tarifa especial los domingos): ");
                     tarifaTardes = input("Precio por minutos de la tarifa por la tarde(si es una cadena vacía no tiene tarifa especial por la tarde): ");
                     tar = TarifaFactory.crearTarifa(0, tar, tarifa);
                     if (!tarifaDomingos.equals("")) {
