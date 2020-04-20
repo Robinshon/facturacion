@@ -21,8 +21,7 @@ public class Menu {
         System.out.println(text);
         return scanner.nextLine();
     }
-    // TODO: main no debe lanzar excepciones, tenéis que capturarlas con un try catch
-    public static void main(String [] args) throws NotExistingClientException, ExistingClientException, NullListCallException, NotExistingInvoceException, NullListClientsException, NullListInvoicesException, IllegalPeriodException, ExistingInvoiceException {
+    public static void main(String [] args) {
         Scanner scanner = new Scanner(System.in);
         Gestor gestor = new Gestor();
         gestor.cargarDatos();
@@ -31,6 +30,7 @@ public class Menu {
         HashMap<String, Factura> facturas;
         OpcionMenu opcionMenu;
         // TODO: Es mejor separar la lógica del menú, así es inmanejable
+        // lo mejoraremos para la próxima entrega
         do {
             System.out.println(OpcionMenu.menu());
             String opcion = input("Elige una opcion");
@@ -72,11 +72,19 @@ public class Menu {
                     } else {
                         c = ClienteFactory.crearCliente(ClienteFactory.PARTICULAR,nombre,apellido,nif,new Direccion(cp,provincia,poblacion),email,tar,new GregorianCalendar(year, month, day));
                     }
-                    gestor.addCliente(c);
+                    try{
+                        gestor.addCliente(c);
+                    }
+                    catch (ExistingClientException e){
+                    }
                     break;
                 case BORRAR_CLIENTE:
                     nif = input("NIF: ");
-                    gestor.removeCliente(nif);
+                    try{
+                        gestor.removeCliente(nif);
+                    }
+                    catch (NotExistingClientException e){
+                    }
                     break;
                 case CAMBIAR_TARIFA:
                     nif = input("NIF: ");
@@ -91,16 +99,27 @@ public class Menu {
                     if (!tarifaTardes.equals("")) {
                         tar = TarifaFactory.crearTarifa(2, tar, parseDouble(tarifaTardes));
                     }
-                    gestor.setTarifa(nif, tar);
+                    try{
+                        gestor.setTarifa(nif, tar);
+                    }
+                    catch (NotExistingClientException e){
+                    }
                     break;
                 case DATOS_CLIENTE:
                     nif = input("NIF: ");
-                    System.out.println(gestor.listarDatos(nif) + "\n");
+                    try{
+                        System.out.println(gestor.listarDatos(nif) + "\n");
+                    }
+                    catch (NotExistingClientException e){
+                    }
                     break;
                 case LISTA_CLIENTE:
-                    clientes = gestor.listaClientes();
-                    for (String cliente : clientes.keySet()) {
-                        System.out.println(clientes.get(cliente).toString());
+                    try {
+                        clientes = gestor.listaClientes();
+                        for (String cliente : clientes.keySet()) {
+                            System.out.println(clientes.get(cliente).toString());
+                        }
+                    } catch (NullListClientsException e) {
                     }
                     System.out.println();
                     break;
@@ -115,13 +134,20 @@ public class Menu {
                     minute = parseInt(input("Minutos: "));
                     second = parseInt(input("Segundos: "));
                     duracion = parseInt(input("Duracion llamada en segundos: "));
-                    gestor.addLlamada(new Llamada(telefono, new GregorianCalendar(year, month, day, hour, minute, second), duracion), nif);
+                    try {
+                        gestor.addLlamada(new Llamada(telefono, new GregorianCalendar(year, month, day, hour, minute, second), duracion), nif);
+                    } catch (NotExistingClientException e) {
+                    }
                     break;
                 case LISTADO_LLAMADAS:
                     nif = input("NIF: ");
-                    llamadas = gestor.listaLlamadas(nif);
-                    for (Llamada llamada : llamadas) {
-                        System.out.println(llamada.toString());
+                    try {
+                        llamadas = gestor.listaLlamadas(nif);
+                        for (Llamada llamada : llamadas) {
+                            System.out.println(llamada.toString());
+                        }
+                    } catch (NotExistingClientException e) {
+                    } catch (NullListCallException e) {
                     }
                     break;
                 case NUEVA_FACTURA:
@@ -135,19 +161,33 @@ public class Menu {
                     monthF = parseInt(input("Mes final: "));
                     monthF -= 1; //Porque queremos que el mes 1 sea Enero y en GregorianCalendar Enero es el mes 0.
                     dayF = parseInt(input("Dia final: "));
-                    gestor.emitirFactura(codigo, nif, new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
+                    try {
+                        gestor.emitirFactura(codigo, nif, new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
+                    } catch (NotExistingClientException e) {
+                    } catch (IllegalPeriodException e) {
+                    } catch (ExistingInvoiceException e) {
+                    }
                     break;
                 case DATOS_FACTURA:
                     nif = input("NIF: ");
                     codigo = input("Codigo: ");
-                    System.out.println(gestor.facturaDatos(nif, codigo));
+                    try {
+                        System.out.println(gestor.facturaDatos(nif, codigo));
+                    } catch (NotExistingClientException e) {
+                    } catch (NotExistingInvoceException e) {
+                    }
                     break;
                 case MOSTRAR_FACTURAS:
                     nif = input("NIF: ");
-                    facturas = gestor.listaFacturas(nif);
-                    for (String factura : facturas.keySet()) {
-                        System.out.println(facturas.get(factura).toString());
+                    try {
+                        facturas = gestor.listaFacturas(nif);
+                        for (String factura : facturas.keySet()) {
+                            System.out.println(facturas.get(factura).toString());
+                        }
+                    } catch (NotExistingClientException e) {
+                    } catch (NullListInvoicesException e) {
                     }
+
                     break;
                 case FECHAS_ALTA_CLIENTE:
                     yearI = parseInt(input("Año inicio: "));
@@ -158,9 +198,14 @@ public class Menu {
                     monthF = parseInt(input("Mes final: "));
                     monthF -= 1; //Porque queremos que el mes 1 sea Enero y en GregorianCalendar Enero es el mes 0.
                     dayF = parseInt(input("Dia final: "));
-                    Collection<Cliente> listaClientes = gestor.mostrarListaClientesEntreFechas(new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
-                    for(Cliente cliente : listaClientes){
-                        System.out.println(cliente.toString());
+                    Collection<Cliente> listaClientes = null;
+                    try {
+                        listaClientes = gestor.mostrarListaClientesEntreFechas(new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
+                        for(Cliente cliente : listaClientes){
+                            System.out.println(cliente.toString());
+                        }
+                    } catch (IllegalPeriodException e) {
+                    } catch (NullListClientsException e) {
                     }
                     break;
                 case FECHAS_LLAMADAS:
@@ -173,10 +218,17 @@ public class Menu {
                     monthF = parseInt(input("Mes final: "));
                     monthF -= 1; //Porque queremos que el mes 1 sea Enero y en GregorianCalendar Enero es el mes 0.
                     dayF = parseInt(input("Dia final: "));
-                    Collection<Llamada> listaLlamadas = gestor.mostrarListaLlamadasEntreFechas(nif,new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
-                    for(Llamada llamada : listaLlamadas){
-                        System.out.println(llamada.toString());
+                    Collection<Llamada> listaLlamadas = null;
+                    try {
+                        listaLlamadas = gestor.mostrarListaLlamadasEntreFechas(nif,new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
+                        for(Llamada llamada : listaLlamadas){
+                            System.out.println(llamada.toString());
+                        }
+                    } catch (NullListCallException e) {
+                    } catch (IllegalPeriodException e) {
+                    } catch (NotExistingClientException e) {
                     }
+
                     break;
                 case FECHAS_FACTURAS:
                     nif = input("NIF: ");
@@ -188,10 +240,17 @@ public class Menu {
                     monthF = parseInt(input("Mes final: "));
                     monthF -= 1; //Porque queremos que Enero sea el mes 1 y en GregorianCalendar Enero es el mes 0.
                     dayF = parseInt(input("Dia final: "));
-                    Collection<Factura> listaFacturas = gestor.mostrarListaFacturasEntreFechas(nif,new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
-                    for(Factura factura: listaFacturas){
-                        System.out.println(factura.toString());
+                    Collection<Factura> listaFacturas = null;
+                    try {
+                        listaFacturas = gestor.mostrarListaFacturasEntreFechas(nif,new GregorianCalendar(yearI, monthI, dayI), new GregorianCalendar(yearF, monthF, dayF));
+                        for(Factura factura: listaFacturas){
+                            System.out.println(factura.toString());
+                        }
+                    } catch (IllegalPeriodException e) {
+                    } catch (NotExistingClientException e) {
+                    } catch (NullListInvoicesException e) {
                     }
+
                     break;
                 case SALIR:
                     gestor.guardarDatos();
@@ -201,4 +260,5 @@ public class Menu {
         } while (opcionMenu != OpcionMenu.SALIR);
 
     }
+
 }

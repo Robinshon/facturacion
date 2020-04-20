@@ -68,13 +68,23 @@ class GestorTest {
     // Alternativamente, podéis usar assertThrows
     @Test
     void addCliente() {
-        try{
+        try {
+            gestor.listarDatos("x212331");
+            fail("El cliente no existe se esperaba NotExistingClientException");
+        } catch (NotExistingClientException e) {
+        }
+        try {
             assertTrue(gestor.addCliente(c));
+        } catch (ExistingClientException e) {
+        }
+        try {
+            gestor.addCliente(c2);
+            fail("El cliente ya esxiste se esperaba ExistingClientException");
+        } catch (ExistingClientException e) {
+        }
+        try {
             assertEquals(gestor.listarDatos("x212331"),c.toString());
-        }catch (ExistingClientException e){
-
-        }catch (NotExistingClientException e){
-
+        } catch (NotExistingClientException e) {
         }
 
 
@@ -83,56 +93,98 @@ class GestorTest {
     @Test
     void removeCliente() {
         try{
+            gestor.removeCliente("x212331");
+            fail("El cliente no existe se esperaba NotExistingClientException");
+        }catch (NotExistingClientException e){
+        }
+        try{
             assertEquals(gestor.listarDatos("x212323112"),c2.toString());
             assertTrue(gestor.removeCliente("x212323112"));
         }catch (NotExistingClientException e){
-
         }
 
     }
 
     @Test
     void setTarifa(){
-        try{
+        try {
+            gestor.setTarifa("x212331", tarifa);
+            fail("El cliente no existe se esperaba NotExistingClientException");
+        } catch (NotExistingClientException e) {
+        }
+        try {
             assertTrue(gestor.setTarifa("x212323112", tarifa));
+        } catch (NotExistingClientException e) {
+        }
+        try {
             assertEquals(gestor.listaClientes().get("x212323112").getTarifa().getPrecioPorMinuto(),tarifa.getPrecioPorMinuto());
-
-        }catch (NotExistingClientException e){
-
         } catch (NullListClientsException e) {
-            e.printStackTrace();
         }
 
     }
 
     @Test
     void addLlamada() {
-        try{
-            assertTrue(gestor.addLlamada(llamada, "x212323112"));
-            assertTrue(gestor.listaLlamadas("x212323112").toString().contains(llamada.toString()));
-        }catch (NotExistingClientException e){
 
-        } catch (NullListCallException e) {
-
+        try {
+            gestor.addLlamada(llamada, "x212331");
+            fail("El cliente no existe se esperaba NotExistingClientException");
+        } catch (NotExistingClientException e) {
         }
+        try {
+            assertTrue(gestor.addLlamada(llamada, "x212323112"));
+        } catch (NotExistingClientException e) {
+        }
+        try {
+            gestor.listaLlamadas("x5218849B").toString();
+            fail("La lista de llamadas del cliente esta vacia se esperaba NullListCallException");
+        } catch (NotExistingClientException e) {
+        } catch (NullListCallException e) {
+        }
+        try {
+            assertTrue(gestor.listaLlamadas("x212323112").toString().contains(llamada.toString()));
+        } catch (NotExistingClientException e) {
+        } catch (NullListCallException e) {
+        }
+
 
     }
 
 
     @Test
     void emitirFactura() {
-        try{
+        try {
+            gestor.emitirFactura("1","x212331",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1));
+            fail("El cliente no existe se esperaba NotExistingClientException");
+        } catch (NotExistingClientException e) {
+        } catch (IllegalPeriodException e) {
+        } catch (ExistingInvoiceException e) {
+        }
+        try {
+            gestor.emitirFactura("1","x212323112",new GregorianCalendar(2022,10,10),new GregorianCalendar(2020,2,1));
+            fail("La fecha inicio es mayor que la final se esperaba IllegalPeriodException");
+        } catch (NotExistingClientException e) {
+        } catch (IllegalPeriodException e) {
+        } catch (ExistingInvoiceException e) {
+        }
+        try {
+            gestor.emitirFactura("2","xx212323112",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1));
+            fail("La factura ya existe se esperaba ExistingInvoiceException");
+        } catch (NotExistingClientException e) {
+        } catch (IllegalPeriodException e) {
+        } catch (ExistingInvoiceException e) {
+        }
+
+        try {
             assertTrue(gestor.emitirFactura("1","x212323112",new GregorianCalendar(2019,10,10),new GregorianCalendar(2020,2,1)));
+        } catch (NotExistingClientException e) {
+        } catch (IllegalPeriodException e) {
+        } catch (ExistingInvoiceException e) {
+        }
+        try {
             assertEquals(gestor.facturaDatos("x212323112","1"),factura.toString());
-
-        }catch(NotExistingClientException e){
-
-        }catch (IllegalPeriodException e){
-
-        }catch (ExistingInvoiceException e){
-
-        }catch (NotExistingInvoceException e) {
-
+        } catch (NotExistingClientException e) {
+        } catch (NotExistingInvoceException e) {
         }
 
 
@@ -152,18 +204,40 @@ class GestorTest {
     @Test
     void facturaDatos() {
         try{
+            gestor.facturaDatos("x212331","1");
+            fail("El cliente no existe se esperaba NotExistingClientException");
+        }catch(NotExistingClientException e){
+        }catch (NotExistingInvoceException e){
+        }
+        try{
+            gestor.facturaDatos("x212323112","10");
+            fail("La factura no existe se esperaba NotExistingInvoiceException");
+        }catch(NotExistingClientException e){
+        }catch (NotExistingInvoceException e){
+        }
+        try{
             //comprobamos que los datos son los mismos en la base de datos a los que tenemos en factura2
             assertEquals(gestor.facturaDatos("x212323112","2"),factura2.toString());
         }catch(NotExistingClientException e){
-
         }catch (NotExistingInvoceException e){
-
         }
 
     }
 
     @Test
     void mostrarListaClientesEntreFechas(){
+        try{
+            gestor.mostrarListaClientesEntreFechas(new GregorianCalendar(2022,12,1),new GregorianCalendar(2020,3,1));
+            fail("La fecha inicio es mayor que la final se esperaba IllegalPeriodException");
+        } catch (IllegalPeriodException e) {
+        } catch (NullListClientsException e) {
+        }
+        try{
+            gestor.mostrarListaClientesEntreFechas(new GregorianCalendar(2030,12,1),new GregorianCalendar(2040,3,1));
+            fail("La lista de clientes entre esas fechas esta vacia se esperaba NullListClientException");
+        } catch (IllegalPeriodException e) {
+        } catch (NullListClientsException e) {
+        }
         try{
             //si la lista tiene a c2 y c3
             assertTrue(gestor.mostrarListaClientesEntreFechas(new GregorianCalendar(2019,12,1),new GregorianCalendar(2020,3,1)).contains(c2));
@@ -174,14 +248,33 @@ class GestorTest {
             //comprobamos la lista preparada clientes
             assertEquals(gestor.mostrarListaClientesEntreFechas(new GregorianCalendar(2019,12,1),new GregorianCalendar(2020,3,1)),clientes);
         }catch (IllegalPeriodException e){
-
         }catch (NullListClientsException e){
-
         }
 
     }
     @Test
     void mostrarListaLlamadasEntreFechas() {
+        try{
+            gestor.mostrarListaLlamadasEntreFechas("x212323112",new GregorianCalendar(2022,12,1),new GregorianCalendar(2020,3,1));
+            fail("La fecha inicio es mayor que la final se esperaba IllegalPeriodException");
+        } catch (IllegalPeriodException e) {
+        } catch (NotExistingClientException e) {
+        } catch (NullListCallException e) {
+        }
+        try{
+            gestor.mostrarListaLlamadasEntreFechas("x212331",new GregorianCalendar(2019,12,1),new GregorianCalendar(2020,3,1));
+            fail("El cliente no existe se esperaba NotExistingClientException");
+        } catch (IllegalPeriodException e) {
+        } catch (NotExistingClientException e) {
+        } catch (NullListCallException e) {
+        }
+        try{
+            gestor.mostrarListaLlamadasEntreFechas("x212323112",new GregorianCalendar(2030,12,1),new GregorianCalendar(2040,3,1));
+            fail("La lista de llamadas entre esas fechas esta vacia se esperaba NullListCallException");
+        } catch (IllegalPeriodException e) {
+        } catch (NotExistingClientException e) {
+        } catch (NullListCallException e) {
+        }
         try{
             assertTrue(gestor.mostrarListaLlamadasEntreFechas("x212323112",new GregorianCalendar(2019,12,1),new GregorianCalendar(2020,3,1)).contains(llamada2));
             assertTrue(gestor.mostrarListaLlamadasEntreFechas("x212323112",new GregorianCalendar(2019,12,1),new GregorianCalendar(2020,3,1)).contains(llamada3));
@@ -195,6 +288,27 @@ class GestorTest {
     @Test
     void mostrarListaFacturasEntreFechas() {
         try{
+            gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2022,1,1),new GregorianCalendar(2020,3,1));
+            fail("La fecha inicio es mayor que la final se esperaba IllegalPeriodException");
+        } catch (IllegalPeriodException e) {
+        } catch (NotExistingClientException e) {
+        } catch (NullListInvoicesException e) {
+        }
+        try{
+            gestor.mostrarListaFacturasEntreFechas("x212331",new GregorianCalendar(2019,1,1),new GregorianCalendar(2020,3,1));
+            fail("El cliente no existe se esperaba NotExistingClientException");
+        } catch (IllegalPeriodException e) {
+        } catch (NotExistingClientException e) {
+        } catch (NullListInvoicesException e) {
+        }
+        try{
+            gestor.mostrarListaLlamadasEntreFechas("x212323112",new GregorianCalendar(2030,12,1),new GregorianCalendar(2040,3,1));
+            fail("La lista de facturas entre esas fechas esta vacia se esperaba NullListCallException");
+        } catch (IllegalPeriodException e) {
+        } catch (NotExistingClientException e) {
+        } catch (NullListCallException e) {
+        }
+        try{
             //compruebo que los datos de las facturas concuerdan con lo esperado
             assertTrue(gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2019,1,1),new GregorianCalendar(2020,3,1)).toString().contains(factura2.toString()));
             assertTrue(gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2019,1,1),new GregorianCalendar(2020,3,1)).toString().contains(factura3.toString()));
@@ -202,11 +316,8 @@ class GestorTest {
             assertFalse(gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2019,1,1),new GregorianCalendar(2020,3,1)).toString().contains(facturaEmitidaTarde.toString()));
             assertEquals(gestor.mostrarListaFacturasEntreFechas("x212323112",new GregorianCalendar(2019,1,1),new GregorianCalendar(2020,3,1)).toString(),facturas.toString());
         }catch (IllegalPeriodException e){
-
         }catch(NotExistingClientException e){
-
         }catch (NullListInvoicesException e){
-
         }
 
 
