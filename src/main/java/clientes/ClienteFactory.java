@@ -3,7 +3,8 @@ package clientes;
 import tarifas.Tarifa;
 
 import java.util.Calendar;
-
+// TODO: mejor que usar constantes de tipo int es crear una enumeración
+//   public enum TipoCliente { EMPRESA, PARTICULAR; }
 public class ClienteFactory {
     public static int EMPRESA = 0;
     public static int PARTICULAR = 1;

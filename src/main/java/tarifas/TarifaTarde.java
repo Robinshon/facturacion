@@ -3,7 +3,7 @@ package tarifas;
 import llamadas.Llamada;
 
 import java.util.Calendar;
-
+// TODO: sería mejor que las horas fueran parámetros para poder elegirlas
 public class TarifaTarde extends TarifaExtra{
     private static final long serialVersionUID = 42L;
     public TarifaTarde(Tarifa tarifa, double importeExtra) {

@@ -3,7 +3,7 @@ package tarifas;
 import llamadas.Llamada;
 
 import java.util.Calendar;
-
+// TODO: Debería ser posible elegir el día de la semana
 public class TarifaDomingo extends TarifaExtra{
     private static final long serialVersionUID = 42L;
 

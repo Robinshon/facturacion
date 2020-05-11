@@ -10,6 +10,9 @@ import clientes.*;
 import llamadas.Llamada;
 import tarifas.Tarifa;
 import tarifas.TarifaFactory;
+import interfaz.controlador.ImplementacionControlador;
+import interfaz.modelo.ImplementacionModelo;
+import interfaz.vista.ImplementacionVista;
 
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
@@ -22,7 +25,16 @@ public class Menu {
         return scanner.nextLine();
     }
     public static void main(String [] args) {
-        Scanner scanner = new Scanner(System.in);
+        ImplementacionControlador controlador = new ImplementacionControlador();
+        ImplementacionVista vista = new ImplementacionVista();
+        ImplementacionModelo modelo = new ImplementacionModelo();
+
+        controlador.setModelo(modelo);
+        vista.setModelo(modelo);
+        vista.setControlador(controlador);
+        modelo.cargarDatos();
+        vista.creaGUI();
+        /*Scanner scanner = new Scanner(System.in);
         Gestor gestor = new Gestor();
         gestor.cargarDatos();
         HashMap<String, Cliente> clientes;
@@ -257,7 +269,7 @@ public class Menu {
                     scanner.close();
                     break;
             }
-        } while (opcionMenu != OpcionMenu.SALIR);
+        } while (opcionMenu != OpcionMenu.SALIR);*/
 
     }
 

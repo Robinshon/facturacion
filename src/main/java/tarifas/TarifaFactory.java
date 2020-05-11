@@ -1,5 +1,5 @@
 package tarifas;
-
+// TODO: Como en la ClienteFactory, mejor una enumeración
 public class TarifaFactory {
     public static Tarifa crearTarifa(int tipo,Tarifa tarifa, double importe) {
 
