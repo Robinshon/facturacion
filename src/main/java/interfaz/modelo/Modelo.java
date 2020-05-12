@@ -27,7 +27,7 @@ public interface Modelo {
     boolean emitirFactura(String codigo, String nif, Calendar fechaInicio, Calendar fechaFin) throws NotExistingClientException, IllegalPeriodException, ExistingInvoiceException;
     String facturaDatos(String nif, String codigo) throws NotExistingClientException, NotExistingInvoceException;
     HashMap<String,Factura> listaFacturas(String nif) throws NotExistingClientException, NullListInvoicesException;
-    Collection<Factura> mostrarListaFacturasEntreFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws NotExistingClientException, NullListCallException, IllegalPeriodException, NullListInvoicesException ;
+    Collection<Factura> mostrarListaFacturasEntreFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws NotExistingClientException, IllegalPeriodException, NullListInvoicesException ;
 
     // Datos
     void guardarDatos() ;

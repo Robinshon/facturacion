@@ -77,7 +77,7 @@ public class ImplementacionVista implements Vista {
 
     // GUI PRINCIPAL
     private void GUI() {
-        tituloVentana = new JFrame("Empresa de Telofonía");
+        tituloVentana = new JFrame("Empresa de Telefonía");
         contenedor = tituloVentana.getContentPane();
         EscuchadorPrincipal escuchador = new EscuchadorPrincipal();
         JPanel panelArriba = new JPanel();
