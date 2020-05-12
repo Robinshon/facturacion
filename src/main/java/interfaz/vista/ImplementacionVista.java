@@ -38,6 +38,7 @@ public class ImplementacionVista implements Vista {
     private Modelo modelo;
     private JFrame tituloVentana = null;
     Container contenedor = null;
+    JPanel panelArriba = null;
     JPanel panelCentral = null;
     JPanel panelAbajo = null;
     JPanel panelFinal = new JPanel();
@@ -80,7 +81,7 @@ public class ImplementacionVista implements Vista {
         tituloVentana = new JFrame("Empresa de Telefonía");
         contenedor = tituloVentana.getContentPane();
         EscuchadorPrincipal escuchador = new EscuchadorPrincipal();
-        JPanel panelArriba = new JPanel();
+        panelArriba = new JPanel();
         JButton boton = new JButton("Gestión clientes");
         boton.addActionListener(escuchador);
         panelArriba.add(boton);
