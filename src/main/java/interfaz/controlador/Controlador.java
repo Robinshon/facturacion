@@ -10,17 +10,17 @@ import tarifas.Tarifa;
 import java.util.*;
 
 public interface Controlador {
-    boolean creaCliente(int tipo, String nombre, String apellidos, String nif, Direccion dir, String correo, Calendar fecha, Tarifa tarifa) throws ExistingClientException;
-    boolean borrarCliente(String nif) throws NotExistingClientException;
-    boolean cambiarTarifa(String nif, Tarifa tarifa) throws NotExistingClientException;
-    String recuperarDatosCliente(String nif) throws NotExistingClientException;
-    HashMap<String, Cliente> recuperaListadoClientes() throws NullListClientsException;
-    Collection<Cliente> recuperaListadoClientesEntreFechas(Calendar fechaInicio, Calendar fechaFin) throws NullListClientsException, IllegalPeriodException;
-    boolean darDeAltaLlamada(Llamada llamada, String nif) throws NotExistingClientException;
-    Set<Llamada> listarLlamadasCliente(String nif) throws NotExistingClientException, NullListCallException;
-    Collection<Llamada> mostrarListadoLlamadasFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws NullListCallException, IllegalPeriodException, NotExistingClientException;
+    boolean addCliente(int tipo, String nombre, String apellidos, String nif, Direccion dir, String correo, Calendar fecha, Tarifa tarifa) throws ExistingClientException;
+    boolean removeCliente(String nif) throws NotExistingClientException;
+    boolean setTarifa(String nif, Tarifa tarifa) throws NotExistingClientException;
+    Cliente listarDatos(String nif) throws NotExistingClientException;
+    HashMap<String, Cliente> listaClientes() throws NullListClientsException;
+    Collection<Cliente> mostrarListaClientesEntreFechas(Calendar fechaInicio, Calendar fechaFin) throws NullListClientsException, IllegalPeriodException;
+    boolean addLlamada(Llamada llamada, String nif) throws NotExistingClientException;
+    Set<Llamada> listaLlamadas(String nif) throws NotExistingClientException, NullListCallException;
+    Collection<Llamada> mostrarListaLlamadasEntreFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws NullListCallException, IllegalPeriodException, NotExistingClientException;
     boolean emitirFactura(String codigo, String nif, Calendar fechaInicio, Calendar fechaFin) throws NotExistingClientException,ExistingInvoiceException, IllegalPeriodException;
-    String recuperarDatosFacturaCodigo(String nif,String codigo) throws NotExistingInvoceException,NotExistingClientException ;
-    HashMap<String,Factura> recuperarFacturas(String nif) throws NotExistingClientException, NullListCallException, NullListInvoicesException;
-    Collection<Factura> mostrarListadoFacturasFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws NotExistingClientException, NullListCallException, IllegalPeriodException, NullListInvoicesException;
+    String facturaDatos(String nif,String codigo) throws NotExistingInvoceException,NotExistingClientException ;
+    HashMap<String,Factura> listaFacturas(String nif) throws NotExistingClientException, NullListCallException, NullListInvoicesException;
+    Collection<Factura> mostrarListaFacturasEntreFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws NotExistingClientException, NullListCallException, IllegalPeriodException, NullListInvoicesException;
 }

@@ -60,6 +60,7 @@ public class ImplementacionVista implements Vista {
     JTextField codFac = null;
     JTextField hora = null;
     JTextField minuto = null;
+    JTextField segundo = null;
     JTextField dur = null;
     JButton submit = null;
     int tipo;
@@ -78,7 +79,7 @@ public class ImplementacionVista implements Vista {
 
     // GUI PRINCIPAL
     private void GUI() {
-        tituloVentana = new JFrame("Empresa de Telefonía");
+        tituloVentana = new JFrame("EI1017");
         contenedor = tituloVentana.getContentPane();
         EscuchadorPrincipal escuchador = new EscuchadorPrincipal();
         panelArriba = new JPanel();
@@ -96,7 +97,7 @@ public class ImplementacionVista implements Vista {
         panelCentral.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         panelArriba.setPreferredSize(new Dimension(1080, 40));
         contenedor.add(panelCentral, BorderLayout.CENTER);
-        tituloVentana.setSize(1150, 500);
+        tituloVentana.setSize(1000, 500);
         tituloVentana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         tituloVentana.setVisible(true);
     }
@@ -612,12 +613,14 @@ public class ImplementacionVista implements Vista {
         day = new JTextField(2);
         hora = new JTextField(6);
         minuto = new JTextField(6);
+        segundo = new JTextField(6);
         JLabel fechaLabel = new JLabel("Fecha de alta: ");
         JLabel anoLabel = new JLabel("Año: ");
         JLabel mesLabel = new JLabel("Mes(numérico): ");
         JLabel diaLabel = new JLabel("Día: ");
         JLabel horaLabel = new JLabel("Hora: ");
-        JLabel minutoLabel = new JLabel("Minuto: ");
+        JLabel minutoLabel = new JLabel("Minutos: ");
+        JLabel segundoLabel = new JLabel("Segundos: ");
         panelFecha.add(fechaLabel);
         panelFecha.add(anoLabel);
         panelFecha.add(year);
@@ -629,6 +632,8 @@ public class ImplementacionVista implements Vista {
         panelFecha.add(hora);
         panelFecha.add(minutoLabel);
         panelFecha.add(minuto);
+        panelFecha.add(segundoLabel);
+        panelFecha.add(segundo);
 
         panelAbajo.add(panelFecha);
 
@@ -1132,13 +1137,13 @@ public class ImplementacionVista implements Vista {
                 int anoLocal = Integer.parseInt(year.getText().trim());
                 int mesLocal = Integer.parseInt(month.getText().trim());
                 int diaLocal = Integer.parseInt(day.getText().trim());
-                fecha.set(anoLocal, mesLocal, diaLocal);
+                fecha.set(anoLocal, mesLocal - 1, diaLocal);
                 int codPosLocal = Integer.parseInt(codPos.getText().trim());
-                Direccion dir = new Direccion(codPosLocal, prov.getText(), pob.getText());
+                Direccion dir = new Direccion(codPosLocal, prov.getText().trim(), pob.getText().trim());
                 Tarifa tarifaLocal = null;
                 tarifaLocal = TarifaFactory.crearTarifa(0, tarifaLocal, Double.parseDouble(tarifa.getText().trim()));
                 try {
-                    controlador.creaCliente(tipo, nombre.getText(), apellido.getText(), nif.getText(), dir,
+                    controlador.addCliente(tipo, nombre.getText().trim(), apellido.getText().trim(), nif.getText().trim(), dir,
                             email.getText(), fecha, tarifaLocal);
                     modelo.guardarDatos();
 
@@ -1165,7 +1170,7 @@ public class ImplementacionVista implements Vista {
             if (texto.equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
-                    controlador.borrarCliente(nif.getText());
+                    controlador.removeCliente(nif.getText().trim());
                     modelo.guardarDatos();
                     JLabel clienteBorrado = new JLabel("Cliente borrado con éxito");
                     panelFinal.add(clienteBorrado);
@@ -1187,15 +1192,29 @@ public class ImplementacionVista implements Vista {
         public void actionPerformed(ActionEvent e) {
             submit = (JButton) e.getSource();
             String texto = submit.getText();
-            Tarifa tarifaLocal = null;
-            tarifaLocal = TarifaFactory.crearTarifa(Integer.parseInt(tipoTar.getText()), tarifaLocal,
+            Tarifa tarifaBase = null;
+            try {
+                tarifaBase = controlador.listarDatos(nif.getText().trim()).getTarifa();
+            } catch (NotExistingClientException e1) {
+                JLabel clienteNoEncontrado = new JLabel("Cliente no encontrado");
+                panelFinal.add(clienteNoEncontrado);
+                panelAbajo.add(panelFinal);
+                panelFinal.updateUI();
+                panelAbajo.updateUI();
+            }
+            tarifaBase = TarifaFactory.crearTarifa(Integer.parseInt(tipoTar.getText().trim()), tarifaBase,
                     Double.parseDouble(tarifa.getText().trim()));
+
             if (texto.equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
-                    controlador.cambiarTarifa(nif.getText(), tarifaLocal);
+                    controlador.setTarifa(nif.getText().trim(), tarifaBase);
                 } catch (NotExistingClientException e1) {
-                    e1.printStackTrace();
+                    JLabel clienteNoEncontrado = new JLabel("Cliente no encontrado");
+                    panelFinal.add(clienteNoEncontrado);
+                    panelAbajo.add(panelFinal);
+                    panelFinal.updateUI();
+                    panelAbajo.updateUI();
                 }
                 modelo.guardarDatos();
                 panelFinal = new JPanel();
@@ -1215,7 +1234,7 @@ public class ImplementacionVista implements Vista {
             if (texto.equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
-                    JLabel cliente = new JLabel(controlador.recuperarDatosCliente(nif.getText()));
+                    JLabel cliente = new JLabel(controlador.listarDatos(nif.getText().trim()).toString());
                     JScrollPane scroll = new JScrollPane(cliente);
                     scroll.setPreferredSize(new Dimension(1080, 100));
                     panelFinal.add(scroll);
@@ -1232,6 +1251,37 @@ public class ImplementacionVista implements Vista {
             }
         }
     }
+    class EscuchadorRecuperarTodos implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            submit = (JButton) e.getSource();
+            String texto = submit.getText();
+            if (texto.equals("Recuperar")) {
+                panelFinal.removeAll();
+                try {
+                    Collection<Cliente> col = controlador.listaClientes().values();
+                    DefaultListModel<String> datos = new DefaultListModel<>();
+                    for (Cliente cliente : col) {
+                        datos.addElement(cliente.toString());
+                    }
+                    JList<String> clientes = new JList<String>(datos);
+                    JScrollPane scroll = new JScrollPane(clientes);
+                    scroll.setPreferredSize(new Dimension(1080, 400));
+                    clientes.setVisibleRowCount(30);
+                    panelFinal.add(scroll);
+                    panelAbajo.add(panelFinal);
+                    scroll.updateUI();
+                    panelFinal.updateUI();
+                    panelAbajo.updateUI();
+                } catch (NullListClientsException e1) {
+                    JLabel clientesNoEncontrados = new JLabel("Clientes no encontrados");
+                    panelFinal.add(clientesNoEncontrados);
+                    panelAbajo.add(panelFinal);
+                    panelFinal.updateUI();
+                    panelAbajo.updateUI();
+                }
+            }
+        }
+    }
 
     class EscuchadorRecuperarTodosEntreFechas implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -1241,16 +1291,16 @@ public class ImplementacionVista implements Vista {
             int anoLocal = Integer.parseInt(year.getText().trim());
             int mesLocal = Integer.parseInt(month.getText().trim());
             int diaLocal = Integer.parseInt(day.getText().trim());
-            fechaInicio.set(anoLocal, mesLocal, diaLocal);
+            fechaInicio.set(anoLocal, mesLocal - 1, diaLocal);
             Calendar fechaFin = Calendar.getInstance();
             int anoLocal2 = Integer.parseInt(year2.getText().trim());
             int mesLocal2 = Integer.parseInt(month2.getText().trim());
             int diaLocal2 = Integer.parseInt(day2.getText().trim());
-            fechaFin.set(anoLocal2, mesLocal2, diaLocal2);
+            fechaFin.set(anoLocal2, mesLocal2 - 1, diaLocal2);
             if (texto.equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
-                    Collection<Cliente> col = controlador.recuperaListadoClientesEntreFechas(fechaInicio, fechaFin);
+                    Collection<Cliente> col = controlador.mostrarListaClientesEntreFechas(fechaInicio, fechaFin);
                     DefaultListModel<String> datos = new DefaultListModel<>();
                     for (Cliente cliente : col) {
                         datos.addElement(cliente.toString());
@@ -1281,38 +1331,6 @@ public class ImplementacionVista implements Vista {
         }
     }
 
-    class EscuchadorRecuperarTodos implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            submit = (JButton) e.getSource();
-            String texto = submit.getText();
-            if (texto.equals("Recuperar")) {
-                panelFinal.removeAll();
-                try {
-                    Collection<Cliente> col = controlador.recuperaListadoClientes().values();
-                    DefaultListModel<String> datos = new DefaultListModel<>();
-                    for (Cliente cliente : col) {
-                        datos.addElement(cliente.toString());
-                    }
-                    JList<String> clientes = new JList<String>(datos);
-                    JScrollPane scroll = new JScrollPane(clientes);
-                    scroll.setPreferredSize(new Dimension(1080, 400));
-                    clientes.setVisibleRowCount(30);
-                    panelFinal.add(scroll);
-                    panelAbajo.add(panelFinal);
-                    scroll.updateUI();
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
-                } catch (NullListClientsException e1) {
-                    JLabel clientesNoEncontrados = new JLabel("Clientes no encontrados");
-                    panelFinal.add(clientesNoEncontrados);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
-                }
-            }
-        }
-    }
-
     class EscuchadorDarAltaLlamada implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             submit = (JButton) e.getSource();
@@ -1325,13 +1343,14 @@ public class ImplementacionVista implements Vista {
                 int diaLocal = Integer.parseInt(day.getText().trim());
                 int horaLocal = Integer.parseInt(hora.getText().trim());
                 int minLocal = Integer.parseInt(minuto.getText().trim());
-                fecha_llamada.set(anoLocal, mesLocal, diaLocal, horaLocal, minLocal);
+                int segLocal = Integer.parseInt(segundo.getText().trim());
+                fecha_llamada.set(anoLocal, mesLocal - 1, diaLocal, horaLocal, minLocal,segLocal);
                 String telefono = telf.getText().trim();
                 int dura = Integer.parseInt(dur.getText().trim());
 
                 Llamada llamada = new Llamada(telefono, fecha_llamada, dura);
                 try {
-                    controlador.darDeAltaLlamada(llamada, nif.getText());
+                    controlador.addLlamada(llamada, nif.getText());
                     modelo.guardarDatos();
 
                     JLabel llamadaRegistrada = new JLabel("Llamada registrada con éxito");
@@ -1357,7 +1376,7 @@ public class ImplementacionVista implements Vista {
             if (texto.equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
-                    Collection<Llamada> col = controlador.listarLlamadasCliente(nif.getText());
+                    Collection<Llamada> col = controlador.listaLlamadas(nif.getText().trim());
                     DefaultListModel<String> datos = new DefaultListModel<>();
                     for (Llamada llamada : col) {
                         datos.addElement(llamada.toString());
@@ -1390,16 +1409,16 @@ public class ImplementacionVista implements Vista {
             int anoLocal = Integer.parseInt(year.getText().trim());
             int mesLocal = Integer.parseInt(month.getText().trim());
             int diaLocal = Integer.parseInt(day.getText().trim());
-            fechaInicio.set(anoLocal, mesLocal, diaLocal);
+            fechaInicio.set(anoLocal, mesLocal - 1, diaLocal);
             Calendar fechaFin = Calendar.getInstance();
             int anoLocal2 = Integer.parseInt(year2.getText().trim());
             int mesLocal2 = Integer.parseInt(month2.getText().trim());
             int diaLocal2 = Integer.parseInt(day2.getText().trim());
-            fechaFin.set(anoLocal2, mesLocal2, diaLocal2);
+            fechaFin.set(anoLocal2, mesLocal2 - 1, diaLocal2);
             if (texto.equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
-                    Collection<Llamada> col = controlador.mostrarListadoLlamadasFechas(nif.getText(), fechaInicio, fechaFin);
+                    Collection<Llamada> col = controlador.mostrarListaLlamadasEntreFechas(nif.getText().trim(), fechaInicio, fechaFin);
                     DefaultListModel<String> datos = new DefaultListModel<>();
                     for (Llamada cliente : col) {
                         datos.addElement(cliente.toString());
@@ -1446,15 +1465,15 @@ public class ImplementacionVista implements Vista {
                 int anoLocal = Integer.parseInt(year.getText().trim());
                 int mesLocal = Integer.parseInt(month.getText().trim());
                 int diaLocal = Integer.parseInt(day.getText().trim());
-                fechaInicio.set(anoLocal, mesLocal, diaLocal);
+                fechaInicio.set(anoLocal, mesLocal - 1, diaLocal);
                 Calendar fechaFin = Calendar.getInstance();
                 int ano2Local = Integer.parseInt(year2.getText().trim());
                 int mes2Local = Integer.parseInt(month2.getText().trim());
                 int dia2Local = Integer.parseInt(day2.getText().trim());
-                fechaInicio.set(ano2Local, mes2Local, dia2Local);
+                fechaFin.set(ano2Local, mes2Local - 1, dia2Local);
 
                 try {
-                    controlador.emitirFactura(codFac.getText(),nif.getText(),fechaInicio, fechaFin);
+                    controlador.emitirFactura(codFac.getText().trim(),nif.getText().trim(),fechaInicio, fechaFin);
                     modelo.guardarDatos();
 
                     JLabel facturaRegistrada = new JLabel("Factura registrada con éxito");
@@ -1492,7 +1511,7 @@ public class ImplementacionVista implements Vista {
             if (texto.equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
-                    JLabel fac = new JLabel(controlador.recuperarDatosFacturaCodigo(codFac.getText(),nif.getText()));
+                    JLabel fac = new JLabel(controlador.facturaDatos(nif.getText().trim(),codFac.getText().trim()));
                     JScrollPane scroll = new JScrollPane(fac);
                     scroll.setPreferredSize(new Dimension(1080, 100));
                     panelFinal.add(scroll);
@@ -1523,7 +1542,7 @@ public class ImplementacionVista implements Vista {
             if (texto.equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
-                    Collection<Factura> col = controlador.recuperarFacturas(nif.getText()).values();
+                    Collection<Factura> col = controlador.listaFacturas(nif.getText().trim()).values();
                     DefaultListModel<String> datos = new DefaultListModel<>();
                     for (Factura factura : col) {
                         datos.addElement(factura.toString());
@@ -1568,16 +1587,16 @@ public class ImplementacionVista implements Vista {
             int anoLocal = Integer.parseInt(year.getText().trim());
             int mesLocal = Integer.parseInt(month.getText().trim());
             int diaLocal = Integer.parseInt(day.getText().trim());
-            fechaInicio.set(anoLocal, mesLocal, diaLocal);
+            fechaInicio.set(anoLocal, mesLocal - 1, diaLocal);
             Calendar fechaFin = Calendar.getInstance();
             int anoLocal2 = Integer.parseInt(year2.getText().trim());
             int mesLocal2 = Integer.parseInt(month2.getText().trim());
             int diaLocal2 = Integer.parseInt(day2.getText().trim());
-            fechaFin.set(anoLocal2, mesLocal2, diaLocal2);
+            fechaFin.set(anoLocal2, mesLocal2 - 1, diaLocal2);
             if (texto.equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
-                    Collection<Factura> col = controlador.mostrarListadoFacturasFechas(nif.getText(), fechaInicio, fechaFin);
+                    Collection<Factura> col = controlador.mostrarListaFacturasEntreFechas(nif.getText().trim(), fechaInicio, fechaFin);
                     DefaultListModel<String> datos = new DefaultListModel<>();
                     for (Factura fac : col) {
                         datos.addElement(fac.toString());

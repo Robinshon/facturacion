@@ -21,43 +21,43 @@ public class ImplementacionControlador implements Controlador{
         this.modelo = modelo;
     }
 
-    public boolean creaCliente(int tipo, String nombre, String apellidos, String nif, Direccion dir, String correo, Calendar fecha, Tarifa tarifa) throws ExistingClientException {
+    public boolean addCliente(int tipo, String nombre, String apellidos, String nif, Direccion dir, String correo, Calendar fecha, Tarifa tarifa) throws ExistingClientException {
         Cliente cliente = ClienteFactory.crearCliente(tipo, nombre, apellidos, nif, dir, correo, tarifa, fecha);
         return modelo.addCliente(cliente);
 
     }
 
-    public boolean borrarCliente(String nif) throws NotExistingClientException {
+    public boolean removeCliente(String nif) throws NotExistingClientException {
         return modelo.removeCliente(nif);
     }
 
-    public boolean cambiarTarifa(String nif, Tarifa tarifa) throws NotExistingClientException {
+    public boolean setTarifa(String nif, Tarifa tarifa) throws NotExistingClientException {
         return modelo.setTarifa(nif, tarifa);
     }
 
-    public String recuperarDatosCliente(String nif) throws NotExistingClientException {
+    public Cliente listarDatos(String nif) throws NotExistingClientException {
         return modelo.listarDatos(nif);
 
     }
 
-    public HashMap<String, Cliente> recuperaListadoClientes() throws NullListClientsException {
+    public HashMap<String, Cliente> listaClientes() throws NullListClientsException {
         return modelo.listaClientes();
 
     }
 
-    public Collection<Cliente> recuperaListadoClientesEntreFechas(Calendar fechaInicio, Calendar fechaFin) throws NullListClientsException, IllegalPeriodException{
+    public Collection<Cliente> mostrarListaClientesEntreFechas(Calendar fechaInicio, Calendar fechaFin) throws NullListClientsException, IllegalPeriodException{
         return modelo.mostrarListaClientesEntreFechas(fechaInicio, fechaFin);
     }
 
-    public boolean darDeAltaLlamada(Llamada llamada, String nif) throws NotExistingClientException{
+    public boolean addLlamada(Llamada llamada, String nif) throws NotExistingClientException{
         return modelo.addLlamada(llamada, nif);
     }
 
-    public Set<Llamada> listarLlamadasCliente(String nif) throws NotExistingClientException, NullListCallException {
+    public Set<Llamada> listaLlamadas(String nif) throws NotExistingClientException, NullListCallException {
         return modelo.listaLlamadas(nif);
     }
 
-    public Collection<Llamada> mostrarListadoLlamadasFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws NullListCallException, IllegalPeriodException, NotExistingClientException{
+    public Collection<Llamada> mostrarListaLlamadasEntreFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws NullListCallException, IllegalPeriodException, NotExistingClientException{
         return modelo.mostrarListaLlamadasEntreFechas(nif, fechaInicio, fechaFin);
     }
 
@@ -65,15 +65,15 @@ public class ImplementacionControlador implements Controlador{
         return modelo.emitirFactura(codigo,nif, fechaInicio, fechaFin);
     }
 
-    public String recuperarDatosFacturaCodigo(String nif,String codigo) throws NotExistingInvoceException, NotExistingClientException {
+    public String facturaDatos(String nif,String codigo) throws NotExistingInvoceException, NotExistingClientException {
         return modelo.facturaDatos(nif,codigo);
     }
 
-    public HashMap<String,Factura> recuperarFacturas(String nif) throws NotExistingClientException, NullListInvoicesException {
+    public HashMap<String,Factura> listaFacturas(String nif) throws NotExistingClientException, NullListInvoicesException {
         return modelo.listaFacturas(nif);
     }
 
-    public Collection<Factura> mostrarListadoFacturasFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws NotExistingClientException, NullListCallException, IllegalPeriodException, NullListInvoicesException {
+    public Collection<Factura> mostrarListaFacturasEntreFechas(String nif, Calendar fechaInicio, Calendar fechaFin) throws NotExistingClientException, NullListCallException, IllegalPeriodException, NullListInvoicesException {
         return modelo.mostrarListaFacturasEntreFechas(nif, fechaInicio, fechaFin);
     }
 

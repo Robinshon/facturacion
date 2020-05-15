@@ -52,10 +52,10 @@ public class ImplementacionModelo implements Modelo{
         throw new NotExistingClientException();
     }
 
-    public String listarDatos(String nif) throws NotExistingClientException {
+    public Cliente listarDatos(String nif) throws NotExistingClientException {
         if(clientes.containsKey(nif)){
             Cliente cliente = clientes.get(nif);
-            return cliente.toString();
+            return cliente;
         }
         throw new NotExistingClientException();
 
