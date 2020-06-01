@@ -1,17 +1,18 @@
 package tarifas;
-// TODO: Como en la ClienteFactory, mejor una enumeración
-public class TarifaFactory {
-    public static Tarifa crearTarifa(int tipo,Tarifa tarifa, double importe) {
 
+import java.time.DayOfWeek;
+
+public class TarifaFactory {
+    public static Tarifa crearTarifa(TipoTarifa tipo, Tarifa tarifa, double importe, DayOfWeek dia, Integer horaInit, Integer horaFin) {
         switch(tipo) {
-            case 0:
+            case BASICA:
                 tarifa = new TarifaBasica(importe);
                 break;
-            case 1:
-                tarifa = new TarifaDomingo(tarifa, importe);
+            case DIA:
+                tarifa = new TarifaDia(tarifa, importe, dia);
                 break;
-            case 2:
-                tarifa = new TarifaTarde(tarifa, importe);
+            case HORAS:
+                tarifa = new TarifaHoras(tarifa, importe, horaInit, horaFin);
                 break;
         }
 

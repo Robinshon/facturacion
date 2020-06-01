@@ -10,7 +10,7 @@ public class TarifaBasica extends Tarifa {
     }
 
     public String descripcion() {
-        return "Básica " + getPrecioPorMinuto();
+        return "Básica: " + getPrecioPorMinuto();
     }
 
     @Override

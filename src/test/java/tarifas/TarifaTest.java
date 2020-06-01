@@ -3,6 +3,7 @@ package tarifas;
 import llamadas.Llamada;
 import org.junit.jupiter.api.*;
 
+import java.time.DayOfWeek;
 import java.util.Calendar;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,40 +36,40 @@ class TarifaTest {
 
     @Test
     public void testDomingo() {
-        tarifa = new TarifaDomingo(base, 0);
+        tarifa = new TarifaDia(base, 0, DayOfWeek.SUNDAY);
         assertEquals(100,tarifa.calcularImporte(llamada2));
         assertEquals(0,tarifa.calcularImporte(llamada));
     }
 
     @Test void testTarde() {
-        tarifa = new TarifaTarde(base,3);
+        tarifa = new TarifaHoras(base,3, 16,20);
         assertEquals(30,tarifa.calcularImporte(llamada2));
         assertEquals(90,tarifa.calcularImporte(llamada));
     }
 
     @Test void testTodasPrimeroDomigo() {
-        tarifa = new TarifaDomingo(base,0);
-        tarifa = new TarifaTarde(tarifa, 3);
+        tarifa = new TarifaDia(base,0, DayOfWeek.SUNDAY);
+        tarifa = new TarifaHoras(tarifa, 3,16,20);
         assertEquals(30,tarifa.calcularImporte(llamada2));
         assertEquals(0,tarifa.calcularImporte(llamada));
     }
 
     @Test void testTodasPrimeroTarde() {
-        tarifa = new TarifaTarde(base,3);
-        tarifa = new TarifaDomingo(tarifa, 0);
+        tarifa = new TarifaHoras(base,3, 16,20);
+        tarifa = new TarifaDia(tarifa, 0, DayOfWeek.SUNDAY);
         assertEquals(30,tarifa.calcularImporte(llamada2));
         assertEquals(0,tarifa.calcularImporte(llamada));
     }
 
     @Test
     public void testCalcularImporte() {
-        tarifa = new TarifaDomingo(base, 0);
+        tarifa = new TarifaDia(base, 0, DayOfWeek.SUNDAY);
         assertEquals(100,tarifa.calcularImporte(llamada2));
         assertEquals(0,tarifa.calcularImporte(llamada));
-        tarifa = new TarifaTarde(tarifa,3);
+        tarifa = new TarifaHoras(tarifa,3,16,20);
         assertEquals(30,tarifa.calcularImporte(llamada2));
         assertEquals(0,tarifa.calcularImporte(llamada));
-        tarifa = new TarifaTarde(tarifa,2);
+        tarifa = new TarifaHoras(tarifa,2,16,20);
         assertEquals(20,tarifa.calcularImporte(llamada2));
         assertEquals(0,tarifa.calcularImporte(llamada));
 

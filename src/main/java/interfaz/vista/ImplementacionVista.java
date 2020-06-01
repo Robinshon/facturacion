@@ -1,30 +1,17 @@
 package interfaz.vista;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
+import java.time.DayOfWeek;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Locale;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+import javax.swing.border.Border;
 
 import clientes.Cliente;
 import clientes.Direccion;
+import clientes.TipoCliente;
 import excepciones.*;
 import facturas.Factura;
 import interfaz.controlador.Controlador;
@@ -32,39 +19,24 @@ import interfaz.modelo.Modelo;
 import llamadas.Llamada;
 import tarifas.Tarifa;
 import tarifas.TarifaFactory;
+import tarifas.TipoTarifa;
 
 public class ImplementacionVista implements Vista {
     private Controlador controlador;
     private Modelo modelo;
-    private JFrame tituloVentana = null;
-    Container contenedor = null;
-    JPanel panelArriba = null;
-    JPanel panelCentral = null;
-    JPanel panelAbajo = null;
+    private JFrame app;
+    Container container;
+    JPanel panelArriba, panelCentral;
+    JPanel panelAbajo = new JPanel();
     JPanel panelFinal = new JPanel();
-    JTextField nif = null;
-    JTextField nombre = null;
-    JTextField apellido = null;
-    JTextField codPos = null;
-    JTextField pob = null;
-    JTextField prov = null;
-    JTextField email = null;
-    JTextField day = null;
-    JTextField month = null;
-    JTextField year = null;
-    JTextField tarifa = null;
-    JTextField day2 = null;
-    JTextField month2 = null;
-    JTextField year2 = null;
-    JTextField telf = null;
-    JTextField codFac = null;
-    JTextField hora = null;
-    JTextField minuto = null;
-    JTextField segundo = null;
-    JTextField dur = null;
-    JButton submit = null;
-    int tipo;
-    JTextField tipoTar;
+    JTextField nif, nombre, apellido, codPos, pob, prov, email, day, month, year, tarifa, day2, month2, year2, telf, codFac, hora, minuto, segundo, dur;
+    JButton submit;
+    TipoCliente tipo;
+    TipoTarifa tipoTar;
+    JRadioButton empresa,particular,basica,dia,horas;
+    Choice dias,horaInit,horaFin;
+    JFrame pop = new JFrame();
+
 
     public void setModelo(Modelo modelo) {
         this.modelo = modelo;
@@ -79,170 +51,133 @@ public class ImplementacionVista implements Vista {
 
     // GUI PRINCIPAL
     private void GUI() {
-        tituloVentana = new JFrame("EI1017");
-        contenedor = tituloVentana.getContentPane();
-        EscuchadorPrincipal escuchador = new EscuchadorPrincipal();
+        app = new JFrame("EI1017");
+        container = app.getContentPane();
+        JMenuBar menu = new JMenuBar();
+        JMenu clientes = new JMenu("Gestión clientes");
+        JMenuItem addClient = new JMenuItem("Nuevo cliente");
+        addClient.setPreferredSize(new Dimension(248,30));
+        JMenuItem removeClient = new JMenuItem("Borrar cliente");
+        removeClient.setPreferredSize(new Dimension(248,30));
+        JMenuItem setTarifa = new JMenuItem("Cambiar tarifa");
+        setTarifa.setPreferredSize(new Dimension(248,30));
+        JMenuItem dataClient = new JMenuItem("Recuperar datos cliente");
+        dataClient.setPreferredSize(new Dimension(248,30));
+        JMenuItem listClient = new JMenuItem("Recuperar listado clientes");
+        listClient.setPreferredSize(new Dimension(248,30));
+        JMenuItem listClientDates = new JMenuItem("Mostrar listado clientes entre fechas");
+        listClientDates.setPreferredSize(new Dimension(248,30));
+        clientes.add(addClient);
+        clientes.addSeparator();
+        clientes.add(removeClient);
+        clientes.addSeparator();
+        clientes.add(setTarifa);
+        clientes.addSeparator();
+        clientes.add(dataClient);
+        clientes.addSeparator();
+        clientes.add(listClient);
+        clientes.addSeparator();
+        clientes.add(listClientDates);
+        EscuchadorCliente escuchadorCliente = new EscuchadorCliente();
+        addClient.addActionListener(escuchadorCliente);
+        removeClient.addActionListener(escuchadorCliente);
+        setTarifa.addActionListener(escuchadorCliente);
+        dataClient.addActionListener(escuchadorCliente);
+        listClient.addActionListener(escuchadorCliente);
+        listClientDates.addActionListener(escuchadorCliente);
+        clientes.setPreferredSize(new Dimension(250,30));
+        Border border = BorderFactory.createLineBorder(Color.BLACK,1);
+        clientes.setBorder(border);
+
+        JMenu llamadas = new JMenu("Gestión llamadas");
+        JMenuItem addCall = new JMenuItem("Dar alta llamada");
+        addCall.setPreferredSize(new Dimension(248,30));
+        JMenuItem listCall = new JMenuItem("Listar llamadas cliente");
+        listCall.setPreferredSize(new Dimension(248,30));
+        JMenuItem listCallDates = new JMenuItem("Listar llamadas cliente entre fechas");
+        listCallDates.setPreferredSize(new Dimension(248,30));
+        llamadas.add(addCall);
+        llamadas.addSeparator();
+        llamadas.add(listCall);
+        llamadas.addSeparator();
+        llamadas.add(listCallDates);
+        EscuchadorLlamada escuchadorLlamada = new EscuchadorLlamada();
+        addCall.addActionListener(escuchadorLlamada);
+        listCall.addActionListener(escuchadorLlamada);
+        listCallDates.addActionListener(escuchadorLlamada);
+        llamadas.setPreferredSize(new Dimension(250,30));
+        llamadas.setBorder(border);
+
+        JMenu facturas = new JMenu("Gestión facturas");
+        JMenuItem addInvoice = new JMenuItem("Emitir factura");
+        addInvoice.setPreferredSize(new Dimension(248,30));
+        JMenuItem dataInvoice = new JMenuItem("Recuperar datos factura de cliente");
+        dataInvoice.setPreferredSize(new Dimension(248,30));
+        JMenuItem listInvoice = new JMenuItem("Recuperar todas las facturas de cliente");
+        listInvoice.setPreferredSize(new Dimension(248,30));
+        JMenuItem listInvoiceDates = new JMenuItem("Recuperar listado facturas entre fechas");
+        listInvoiceDates.setPreferredSize(new Dimension(248,30));
+        facturas.add(addInvoice);
+        facturas.addSeparator();
+        facturas.add(dataInvoice);
+        facturas.addSeparator();
+        facturas.add(listInvoice);
+        facturas.addSeparator();
+        facturas.add(listInvoiceDates);
+        EscuchadorFactura escuchadorFactura = new EscuchadorFactura();
+        addInvoice.addActionListener(escuchadorFactura);
+        dataInvoice.addActionListener(escuchadorFactura);
+        listInvoice.addActionListener(escuchadorFactura);
+        listInvoiceDates.addActionListener(escuchadorFactura);
+        facturas.setPreferredSize(new Dimension(250,30));
+        facturas.setBorder(border);
+
+        menu.add(clientes);
+        menu.add(llamadas);
+        menu.add(facturas);
         panelArriba = new JPanel();
-        JButton boton = new JButton("Gestión clientes");
-        boton.addActionListener(escuchador);
-        panelArriba.add(boton);
-        boton = new JButton("Gestión llamadas");
-        boton.addActionListener(escuchador);
-        panelArriba.add(boton);
-        boton = new JButton("Gestión facturas");
-        boton.addActionListener(escuchador);
-        panelArriba.add(boton);
-        contenedor.add(panelArriba, BorderLayout.NORTH);
+        panelArriba.setBackground(Color.LIGHT_GRAY);
+        panelArriba.add(menu);
+
+        container.add(panelArriba, BorderLayout.NORTH);
         panelCentral = new JPanel();
+        panelCentral.setPreferredSize(new Dimension(1200, 300));
+        panelAbajo.setPreferredSize(new Dimension(1200, 300));
         panelCentral.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        border = BorderFactory.createLineBorder(Color.BLACK,2);
+        panelCentral.setBorder(border);
+        panelCentral.setBackground(Color.WHITE);
+        panelAbajo.setBackground(Color.WHITE);
+        panelAbajo.setLayout(new GridLayout(0,1));
         panelArriba.setPreferredSize(new Dimension(1080, 40));
-        contenedor.add(panelCentral, BorderLayout.CENTER);
-        tituloVentana.setSize(1000, 500);
-        tituloVentana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        tituloVentana.setVisible(true);
+        container.add(panelCentral, BorderLayout.CENTER);
+        app.setSize(1200, 400);
+        app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        app.setVisible(true);
     }
 
-    // GUI MENU
-    private void GUICliente() {
-        JPanel menu = new JPanel();
-        panelCentral.removeAll();
-        EscuchadorCliente escuchador = new EscuchadorCliente();
-        menu.setLayout(new BoxLayout(menu, BoxLayout.LINE_AXIS));
-        JButton boton = new JButton("Nuevo cliente");
-        boton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-        boton.addActionListener(escuchador);
-        menu.add(boton);
-        boton = new JButton("Borrar cliente");
-        boton.addActionListener(escuchador);
-        menu.add(boton);
-        boton = new JButton("Cambiar tarifa");
-        boton.addActionListener(escuchador);
-        menu.add(boton);
-        boton = new JButton("Recuperar datos cliente");
-        boton.addActionListener(escuchador);
-        menu.add(boton);
-        boton = new JButton("Recuperar listado clientes");
-        boton.addActionListener(escuchador);
-        menu.add(boton);
-        boton = new JButton("Mostrar listado clientes entre fechas");
-        boton.addActionListener(escuchador);
-        menu.add(boton);
-
-
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelCentral.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-        panelCentral.add(menu, BorderLayout.NORTH);
-        panelCentral.add(panelEspacio);
-        panelAbajo = new JPanel();
-        panelAbajo.setPreferredSize(new Dimension(1200, 600));
-        panelCentral.add(panelAbajo, BorderLayout.CENTER);
-        panelCentral.updateUI();
-    }
-
-    private void GUILlamada() {
-        JPanel menu = new JPanel();
-        panelCentral.removeAll();
-        EscuchadorLlamada escuchador = new EscuchadorLlamada();
-        menu.setLayout(new BoxLayout(menu, BoxLayout.LINE_AXIS));
-        JButton boton = new JButton("Dar alta llamada");
-        boton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-        boton.addActionListener(escuchador);
-        menu.add(boton);
-        boton = new JButton("Listar llamadas cliente");
-        boton.addActionListener(escuchador);
-        menu.add(boton);
-        boton = new JButton("Listar llamadas cliente entre fechas");
-
-        boton.addActionListener(escuchador);
-        menu.add(boton);
-
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelCentral.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-        panelCentral.add(menu, BorderLayout.NORTH);
-        panelCentral.add(panelEspacio);
-        panelAbajo = new JPanel();
-        panelAbajo.setPreferredSize(new Dimension(1200, 600));
-        panelCentral.add(panelAbajo, BorderLayout.CENTER);
-        panelCentral.updateUI();
-    }
-
-    private void GUIFactura() {
-        JPanel menu = new JPanel();
-        panelCentral.removeAll();
-        menu.setLayout(new BoxLayout(menu, BoxLayout.LINE_AXIS));
-        EscuchadorFactura escuchador = new EscuchadorFactura();
-        JButton boton = new JButton("Emitir factura");
-        boton.addActionListener(escuchador);
-        menu.add(boton);
-        boton = new JButton("Recuperar datos factura");
-        boton.addActionListener(escuchador);
-        menu.add(boton);
-        boton = new JButton("Recuperar todas las facturas");
-        boton.addActionListener(escuchador);
-        menu.add(boton);
-        boton = new JButton("Recuperar listado facturas entre fechas");
-        boton.addActionListener(escuchador);
-        menu.add(boton);
-
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelCentral.add(menu, BorderLayout.NORTH);
-        panelCentral.add(panelEspacio);
-        panelAbajo = new JPanel();
-        panelAbajo.setPreferredSize(new Dimension(1200, 600));
-        panelCentral.add(panelAbajo, BorderLayout.CENTER);
-        panelCentral.updateUI();
-    }
-
-    // GUI CLIENTE
     private void GUIDarAlta() {
+        panelCentral.add(panelAbajo);
+        panelCentral.updateUI();
         panelAbajo.removeAll();
-
-        JPanel panelEmpresa = new JPanel();
-        tipo = 1;
-        JRadioButton si = new JRadioButton("si");
-        JRadioButton no = new JRadioButton("no");
-        si.setActionCommand("si");
-        si.addItemListener(e -> {
-            switch (e.getStateChange()) {
-                case ItemEvent.SELECTED:
-                    tipo = 0;
-                    break;
-                case ItemEvent.DESELECTED:
-                    tipo = 1;
-                    break;
-            }
-        });
-        panelEmpresa.add(new JLabel("¿Eres una empresa?"));
-        panelEmpresa.add(si);
-        panelEmpresa.add(no);
+        JPanel panelTipoCliente = new JPanel();
+        empresa = new JRadioButton("Empresa");
+        particular = new JRadioButton("Particular");
+        empresa.setSelected(true);
         ButtonGroup grupo = new ButtonGroup();
-        grupo.add(si);
-        grupo.add(no);
+        grupo.add(empresa);
+        grupo.add(particular);
+        panelTipoCliente.add(empresa);
+        panelTipoCliente.add(particular);
+        panelAbajo.add(panelTipoCliente);
 
-        panelAbajo.add(panelEmpresa);
-
-        JPanel panelNombre = new JPanel();
+        JPanel panelNombreCliente = new JPanel();
         nombre = new JTextField(20);
         JLabel nombreLabel = new JLabel("Nombre: ");
-        panelNombre.add(nombreLabel);
-        panelNombre.add(nombre);
+        panelNombreCliente.add(nombreLabel);
+        panelNombreCliente.add(nombre);
 
-        panelAbajo.add(panelNombre);
+        panelAbajo.add(panelNombreCliente);
 
         JPanel panelApellido = new JPanel();
         apellido = new JTextField(20);
@@ -313,14 +248,6 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(panelTarifa);
 
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelAbajo.add(panelEspacio);
-
         EscuchadorDarAlta escuchadorDarAlta = new EscuchadorDarAlta();
         JPanel panelSubmit = new JPanel();
         submit = new JButton("Enviar");
@@ -329,28 +256,21 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(submit);
 
-        JPanel panelEspacio2 = new JPanel();
-        JLabel espacioLabel2 = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio2.add(espacioLabel2);
-
-        panelAbajo.add(panelEspacio2);
-
-        panelEspacio.updateUI();
         panelSubmit.updateUI();
         panelTarifa.updateUI();
         panelFecha.updateUI();
         panelCorreo.updateUI();
         panelDireccion.updateUI();
         panelApellido.updateUI();
-        panelNombre.updateUI();
+        panelNombreCliente.updateUI();
         panelNif.updateUI();
-        panelEmpresa.updateUI();
+        panelTipoCliente.updateUI();
         panelAbajo.updateUI();
     }
 
     private void GUIBorrarCliente() {
+        panelCentral.add(panelAbajo);
+        panelCentral.updateUI();
         panelAbajo.removeAll();
 
         JPanel panelNif = new JPanel();
@@ -361,13 +281,6 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(panelNif);
 
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelAbajo.add(panelEspacio);
 
         JPanel panelSubmit = new JPanel();
         submit = new JButton("Enviar");
@@ -378,14 +291,7 @@ public class ImplementacionVista implements Vista {
         panelAbajo.add(submit);
 
         JPanel panelEspacio2 = new JPanel();
-        JLabel espacioLabel2 = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio2.add(espacioLabel2);
 
-        panelAbajo.add(panelEspacio2);
-
-        panelEspacio.updateUI();
         panelSubmit.updateUI();
         panelNif.updateUI();
         panelAbajo.updateUI();
@@ -393,6 +299,8 @@ public class ImplementacionVista implements Vista {
     }
 
     private void GUICambiarTarifa() {
+        panelCentral.add(panelAbajo);
+        panelCentral.updateUI();
         panelAbajo.removeAll();
 
         JPanel panelNif = new JPanel();
@@ -404,10 +312,17 @@ public class ImplementacionVista implements Vista {
         panelAbajo.add(panelNif);
 
         JPanel panelTipoTar = new JPanel();
-        JLabel tipoTarLabel = new JLabel("Tarifa	(0 Básica) (1 Domingo) (2 Tardes): ");
-        tipoTar = new JTextField(5);
-        panelTipoTar.add(tipoTarLabel);
-        panelTipoTar.add(tipoTar);
+        basica = new JRadioButton("Básica");
+        basica.setSelected(true);
+        dia = new JRadioButton("Día");
+        horas = new JRadioButton("Horas");
+        ButtonGroup grupo = new ButtonGroup();
+        grupo.add(basica);
+        grupo.add(dia);
+        grupo.add(horas);
+        panelTipoTar.add(basica);
+        panelTipoTar.add(dia);
+        panelTipoTar.add(horas);
 
         panelAbajo.add(panelTipoTar);
 
@@ -419,13 +334,81 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(panelTarifa);
 
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
+        JPanel panelTarifaDia = new JPanel();
+        JLabel tarifaLabelDia = new JLabel("(Solo si seleccionas Día)");
+        dias = new Choice();
+        dias.addItem("Lunes");
+        dias.addItem("Martes");
+        dias.addItem("Miércoles");
+        dias.addItem("Jueves");
+        dias.addItem("Viernes");
+        dias.addItem("Sábado");
+        dias.addItem("Domingo");
+        panelTarifaDia.add(tarifaLabelDia);
+        panelTarifaDia.add(dias);
+        panelAbajo.add(panelTarifaDia);
 
-        panelAbajo.add(panelEspacio);
+        JPanel panelTarifaHoras = new JPanel();
+        JLabel tarifaLabelHoras = new JLabel("(Solo si seleccionas Horas)");
+        horaInit = new Choice();
+        horaFin = new Choice();
+        horaInit.addItem("00");
+        horaInit.addItem("01");
+        horaInit.addItem("02");
+        horaInit.addItem("03");
+        horaInit.addItem("04");
+        horaInit.addItem("05");
+        horaInit.addItem("06");
+        horaInit.addItem("07");
+        horaInit.addItem("08");
+        horaInit.addItem("09");
+        horaInit.addItem("10");
+        horaInit.addItem("11");
+        horaInit.addItem("12");
+        horaInit.addItem("13");
+        horaInit.addItem("14");
+        horaInit.addItem("15");
+        horaInit.addItem("16");
+        horaInit.addItem("17");
+        horaInit.addItem("18");
+        horaInit.addItem("19");
+        horaInit.addItem("20");
+        horaInit.addItem("21");
+        horaInit.addItem("22");
+        horaInit.addItem("23");
+        horaInit.select(0);
+
+        horaFin.addItem("01");
+        horaFin.addItem("02");
+        horaFin.addItem("03");
+        horaFin.addItem("04");
+        horaFin.addItem("05");
+        horaFin.addItem("06");
+        horaFin.addItem("07");
+        horaFin.addItem("08");
+        horaFin.addItem("09");
+        horaFin.addItem("10");
+        horaFin.addItem("11");
+        horaFin.addItem("12");
+        horaFin.addItem("13");
+        horaFin.addItem("14");
+        horaFin.addItem("15");
+        horaFin.addItem("16");
+        horaFin.addItem("17");
+        horaFin.addItem("18");
+        horaFin.addItem("19");
+        horaFin.addItem("20");
+        horaFin.addItem("21");
+        horaFin.addItem("22");
+        horaFin.addItem("23");
+        horaFin.addItem("24");
+        horaFin.select(0);
+
+        panelTarifaHoras.add(tarifaLabelHoras);
+        panelTarifaHoras.add(horaInit);
+        panelTarifaHoras.add(horaFin);
+        panelAbajo.add(panelTarifaHoras);
+
 
         JPanel panelSubmit = new JPanel();
         submit = new JButton("Enviar");
@@ -436,7 +419,8 @@ public class ImplementacionVista implements Vista {
         panelAbajo.add(submit);
 
         panelTipoTar.updateUI();
-        panelEspacio.updateUI();
+        panelTarifaDia.updateUI();
+        panelTarifaHoras.updateUI();
         panelSubmit.updateUI();
         panelTarifa.updateUI();
         panelNif.updateUI();
@@ -444,6 +428,8 @@ public class ImplementacionVista implements Vista {
     }
 
     private void GUIRecuperarCliente() {
+        panelCentral.add(panelAbajo);
+        panelCentral.updateUI();
         panelAbajo.removeAll();
 
         JPanel panelNif = new JPanel();
@@ -454,13 +440,6 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(panelNif);
 
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelAbajo.add(panelEspacio);
 
         JPanel panelSubmit = new JPanel();
         submit = new JButton("Enviar");
@@ -470,30 +449,15 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(submit);
 
-        JPanel panelEspacio2 = new JPanel();
-        JLabel espacioLabel2 = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio2.add(espacioLabel2);
-
-        panelAbajo.add(panelEspacio2);
-
         panelSubmit.updateUI();
-        panelEspacio.updateUI();
         panelNif.updateUI();
         panelAbajo.updateUI();
     }
 
     private void GUIRecuperarListado() {
+        panelCentral.add(panelAbajo);
+        panelCentral.updateUI();
         panelAbajo.removeAll();
-
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelAbajo.add(panelEspacio);
 
         JPanel panelSubmit = new JPanel();
         submit = new JButton("Recuperar");
@@ -503,20 +467,13 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(submit);
 
-        JPanel panelEspacio2 = new JPanel();
-        JLabel espacioLabel2 = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio2.add(espacioLabel2);
-
-        panelAbajo.add(panelEspacio2);
-
-        panelEspacio.updateUI();
         panelSubmit.updateUI();
         panelAbajo.updateUI();
     }
 
     private void GUIRecuperarListadoEntreFechas() {
+        panelCentral.add(panelAbajo);
+        panelCentral.updateUI();
         panelAbajo.removeAll();
 
         JPanel panelFecha = new JPanel();
@@ -555,14 +512,6 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(panelFecha2);
 
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelAbajo.add(panelEspacio);
-
         JPanel panelSubmit = new JPanel();
         submit = new JButton("Enviar");
         EscuchadorRecuperarTodosEntreFechas escuchadorFechas = new EscuchadorRecuperarTodosEntreFechas();
@@ -571,24 +520,15 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(submit);
 
-        JPanel panelEspacio2 = new JPanel();
-        JLabel espacioLabel2 = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio2.add(espacioLabel2);
-
-        panelAbajo.add(panelEspacio2);
-
-        panelEspacio.updateUI();
         panelSubmit.updateUI();
         panelFecha.updateUI();
         panelFecha2.updateUI();
         panelAbajo.updateUI();
     }
 
-    // GUI LLAMADAS
-
     private void GUIDarAltaLlamada() {
+        panelCentral.add(panelAbajo);
+        panelCentral.updateUI();
         panelAbajo.removeAll();
 
         JPanel panelNif = new JPanel();
@@ -645,13 +585,6 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(panelDur);
 
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelAbajo.add(panelEspacio);
 
         JPanel panelSubmit = new JPanel();
         submit = new JButton("Enviar");
@@ -661,25 +594,18 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(submit);
 
-        JPanel panelEspacio2 = new JPanel();
-        JLabel espacioLabel2 = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio2.add(espacioLabel2);
-
-        panelAbajo.add(panelEspacio2);
-
-        panelEspacio.updateUI();
         panelSubmit.updateUI();
-        panelDur.updateUI();
         panelFecha.updateUI();
-        panelTelf.updateUI();
         panelNif.updateUI();
+        panelDur.updateUI();
+        panelTelf.updateUI();
         panelAbajo.updateUI();
 
     }
 
     private void GUIListarLlamadas() {
+        panelCentral.add(panelAbajo);
+        panelCentral.updateUI();
         panelAbajo.removeAll();
 
         JPanel panelNif = new JPanel();
@@ -690,14 +616,6 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(panelNif);
 
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelAbajo.add(panelEspacio);
-
         JPanel panelSubmit = new JPanel();
         submit = new JButton("Enviar");
         EscuchadorRecuperarTodasLlamadas escuchadorRecuperarTodasLlamadas = new EscuchadorRecuperarTodasLlamadas();
@@ -706,21 +624,14 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(submit);
 
-        JPanel panelEspacio2 = new JPanel();
-        JLabel espacioLabel2 = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio2.add(espacioLabel2);
-
-        panelAbajo.add(panelEspacio2);
-
-        panelEspacio.updateUI();
         panelSubmit.updateUI();
         panelNif.updateUI();
         panelAbajo.updateUI();
     }
 
     private void GUIListarLlamadasEntreFechas() {
+        panelCentral.add(panelAbajo);
+        panelCentral.updateUI();
         panelAbajo.removeAll();
 
         JPanel panelNif = new JPanel();
@@ -767,13 +678,6 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(panelFecha2);
 
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelAbajo.add(panelEspacio);
 
         JPanel panelSubmit = new JPanel();
         submit = new JButton("Enviar");
@@ -783,25 +687,17 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(submit);
 
-        JPanel panelEspacio2 = new JPanel();
-        JLabel espacioLabel2 = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio2.add(espacioLabel2);
-
-        panelAbajo.add(panelEspacio2);
-
         panelNif.updateUI();
-        panelEspacio.updateUI();
         panelSubmit.updateUI();
         panelFecha.updateUI();
         panelFecha2.updateUI();
         panelAbajo.updateUI();
     }
 
-    // GUI FACTURAS
 
     private void GUIEmitirFactura() {
+        panelCentral.add(panelAbajo);
+        panelCentral.updateUI();
         panelAbajo.removeAll();
         JPanel panelcodFac = new JPanel();
         codFac = new JTextField(20);
@@ -853,14 +749,6 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(panelFecha);
 
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelAbajo.add(panelEspacio);
-
         JPanel panelSubmit = new JPanel();
         submit = new JButton("Enviar");
         EscuchadorEmitirFactura escEF = new EscuchadorEmitirFactura();
@@ -869,15 +757,6 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(submit);
 
-        JPanel panelEspacio2 = new JPanel();
-        JLabel espacioLabel2 = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio2.add(espacioLabel2);
-
-        panelAbajo.add(panelEspacio2);
-
-        panelEspacio.updateUI();
         panelSubmit.updateUI();
         panelFecha.updateUI();
         panelNif.updateUI();
@@ -886,6 +765,8 @@ public class ImplementacionVista implements Vista {
     }
 
     private void GUIRecuperarDatosFactura() {
+        panelCentral.add(panelAbajo);
+        panelCentral.updateUI();
         panelAbajo.removeAll();
 
         JPanel panelNif = new JPanel();
@@ -904,14 +785,6 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(panelcodFac);
 
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelAbajo.add(panelEspacio);
-
         JPanel panelSubmit = new JPanel();
         submit = new JButton("Enviar");
         EscuchadorRecuperarFacturas escRF = new EscuchadorRecuperarFacturas();
@@ -920,21 +793,14 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(submit);
 
-        JPanel panelEspacio2 = new JPanel();
-        JLabel espacioLabel2 = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio2.add(espacioLabel2);
-
-        panelAbajo.add(panelEspacio2);
-
         panelSubmit.updateUI();
-        panelEspacio.updateUI();
         panelcodFac.updateUI();
         panelAbajo.updateUI();
     }
 
     private void GUIRecuperarTodasFacturas() {
+        panelCentral.add(panelAbajo);
+        panelCentral.updateUI();
         panelAbajo.removeAll();
 
         JPanel panelNif = new JPanel();
@@ -945,13 +811,6 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(panelNif);
 
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelAbajo.add(panelEspacio);
 
         JPanel panelSubmit = new JPanel();
         submit = new JButton("Enviar");
@@ -961,21 +820,14 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(submit);
 
-        JPanel panelEspacio2 = new JPanel();
-        JLabel espacioLabel2 = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio2.add(espacioLabel2);
-
-        panelAbajo.add(panelEspacio2);
-
         panelSubmit.updateUI();
-        panelEspacio.updateUI();
         panelNif.updateUI();
         panelAbajo.updateUI();
     }
 
     private void GUIRecuperarFacturasEntreFechas() {
+        panelCentral.add(panelAbajo);
+        panelCentral.updateUI();
         panelAbajo.removeAll();
 
         JPanel panelNif = new JPanel();
@@ -1022,14 +874,6 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(panelFecha2);
 
-        JPanel panelEspacio = new JPanel();
-        JLabel espacioLabel = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio.add(espacioLabel);
-
-        panelAbajo.add(panelEspacio);
-
         JPanel panelSubmit = new JPanel();
         submit = new JButton("Enviar");
         EscuchadorRecuperarTodasFacturasEntreFechas escTFEF = new EscuchadorRecuperarTodasFacturasEntreFechas();
@@ -1038,23 +882,13 @@ public class ImplementacionVista implements Vista {
 
         panelAbajo.add(submit);
 
-        JPanel panelEspacio2 = new JPanel();
-        JLabel espacioLabel2 = new JLabel(
-                "                                                                                                                                                                                                                "
-                        + "                                                                                                                                                                                                                                                                                 ");
-        panelEspacio2.add(espacioLabel2);
-
-        panelAbajo.add(panelEspacio2);
-
         panelNif.updateUI();
-        panelEspacio.updateUI();
         panelSubmit.updateUI();
         panelFecha.updateUI();
         panelFecha2.updateUI();
         panelAbajo.updateUI();
     }
 
-    // CREAR GUI
 
     public void creaGUI() {
         SwingUtilities.invokeLater(new Runnable() {
@@ -1067,18 +901,16 @@ public class ImplementacionVista implements Vista {
 
     class EscuchadorFactura implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            JButton boton = (JButton) e.getSource();
-            String texto = boton.getText();
-            if (texto.equals("Emitir factura")) {
+            if (e.getActionCommand().equals("Emitir factura")) {
                 GUIEmitirFactura();
             }
-            if (texto.equals("Recuperar datos factura")) {
+            else if (e.getActionCommand().equals("Recuperar datos factura de cliente")) {
                 GUIRecuperarDatosFactura();
             }
-            if (texto.equals("Recuperar todas las facturas")) {
+            else if (e.getActionCommand().equals("Recuperar todas las facturas de cliente")) {
                 GUIRecuperarTodasFacturas();
             }
-            if (texto.equals("Recuperar listado facturas entre fechas")) {
+            else if (e.getActionCommand().equals("Recuperar listado facturas entre fechas")) {
                 GUIRecuperarFacturasEntreFechas();
             }
         }
@@ -1086,42 +918,36 @@ public class ImplementacionVista implements Vista {
 
     class EscuchadorLlamada implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            JButton boton = (JButton) e.getSource();
-            String texto = boton.getText();
-            if (texto.equals("Dar alta llamada")) {
+            if (e.getActionCommand().equals("Dar alta llamada")) {
                 GUIDarAltaLlamada();
             }
-            if (texto.equals("Listar llamadas cliente")) {
+            else if (e.getActionCommand().equals("Listar llamadas cliente")) {
                 GUIListarLlamadas();
             }
-            if (texto.equals("Listar llamadas cliente entre fechas")) {
+            else if (e.getActionCommand().equals("Listar llamadas cliente entre fechas")) {
                 GUIListarLlamadasEntreFechas();
             }
         }
     }
 
-    // ESCUCHADORES CLIENTE
-
     class EscuchadorCliente implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            JButton boton = (JButton) e.getSource();
-            String texto = boton.getText();
-            if (texto.equals("Nuevo cliente")) {
+            if (e.getActionCommand().equals("Nuevo cliente")) {
                 GUIDarAlta();
             }
-            if (texto.equals("Borrar cliente")) {
+            else if (e.getActionCommand().equals("Borrar cliente")) {
                 GUIBorrarCliente();
             }
-            if (texto.equals("Cambiar tarifa")) {
+            else if (e.getActionCommand().equals("Cambiar tarifa")) {
                 GUICambiarTarifa();
             }
-            if (texto.equals("Recuperar datos cliente")) {
+            else if (e.getActionCommand().equals("Recuperar datos cliente")) {
                 GUIRecuperarCliente();
             }
-            if (texto.equals("Recuperar listado clientes")) {
+            else if (e.getActionCommand().equals("Recuperar listado clientes")) {
                 GUIRecuperarListado();
             }
-            if (texto.equals("Mostrar listado clientes entre fechas")) {
+            else if (e.getActionCommand().equals("Mostrar listado clientes entre fechas")) {
                 GUIRecuperarListadoEntreFechas();
             }
         }
@@ -1129,10 +955,13 @@ public class ImplementacionVista implements Vista {
 
     class EscuchadorDarAlta implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            submit = (JButton) e.getSource();
-            String texto = submit.getText();
-            if (texto.equals("Enviar")) {
-                panelFinal.removeAll();
+            if (e.getActionCommand().equals("Enviar")) {
+                if(empresa.isSelected()){
+                    tipo = TipoCliente.EMPRESA;
+                }
+                else{
+                    tipo = TipoCliente.PARTICULAR;
+                }
                 Calendar fecha = Calendar.getInstance();
                 int anoLocal = Integer.parseInt(year.getText().trim());
                 int mesLocal = Integer.parseInt(month.getText().trim());
@@ -1141,23 +970,14 @@ public class ImplementacionVista implements Vista {
                 int codPosLocal = Integer.parseInt(codPos.getText().trim());
                 Direccion dir = new Direccion(codPosLocal, prov.getText().trim(), pob.getText().trim());
                 Tarifa tarifaLocal = null;
-                tarifaLocal = TarifaFactory.crearTarifa(0, tarifaLocal, Double.parseDouble(tarifa.getText().trim()));
+                tarifaLocal = TarifaFactory.crearTarifa(TipoTarifa.BASICA, tarifaLocal, Double.parseDouble(tarifa.getText().trim()),null,null,null);
                 try {
                     controlador.addCliente(tipo, nombre.getText().trim(), apellido.getText().trim(), nif.getText().trim(), dir,
                             email.getText(), fecha, tarifaLocal);
                     modelo.guardarDatos();
-
-                    JLabel clienteRegistrado = new JLabel("Cliente registrado con éxito");
-                    panelFinal.add(clienteRegistrado);
-                    panelAbajo.add(panelFinal,BorderLayout.CENTER);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Cliente registrado con éxito","Éxito",JOptionPane.PLAIN_MESSAGE);
                 } catch (ExistingClientException e1) {
-                    JLabel clienteNoRegistrado = new JLabel("Cliente ya existente");
-                    panelFinal.add(clienteNoRegistrado);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Cliente ya existente","Aviso",JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
@@ -1165,24 +985,13 @@ public class ImplementacionVista implements Vista {
 
     class EscuchadorBorrarCliente implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            submit = (JButton) e.getSource();
-            String texto = submit.getText();
-            if (texto.equals("Enviar")) {
-                panelFinal.removeAll();
+            if (e.getActionCommand().equals("Enviar")) {
                 try {
                     controlador.removeCliente(nif.getText().trim());
                     modelo.guardarDatos();
-                    JLabel clienteBorrado = new JLabel("Cliente borrado con éxito");
-                    panelFinal.add(clienteBorrado);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Cliente borrado con éxito","Éxito",JOptionPane.PLAIN_MESSAGE);
                 } catch (NotExistingClientException e1) {
-                    JLabel clienteNoEncontrado = new JLabel("Cliente no encontrado");
-                    panelFinal.add(clienteNoEncontrado);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Cliente no encontrado","Aviso",JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
@@ -1190,72 +999,58 @@ public class ImplementacionVista implements Vista {
 
     class EscuchadorCambiarTarifa implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            submit = (JButton) e.getSource();
-            String texto = submit.getText();
             Tarifa tarifaBase = null;
             try {
                 tarifaBase = controlador.listarDatos(nif.getText().trim()).getTarifa();
             } catch (NotExistingClientException e1) {
-                JLabel clienteNoEncontrado = new JLabel("Cliente no encontrado");
-                panelFinal.add(clienteNoEncontrado);
-                panelAbajo.add(panelFinal);
-                panelFinal.updateUI();
+                JOptionPane.showMessageDialog(pop,"Cliente no encontrado","Aviso",JOptionPane.WARNING_MESSAGE);
                 panelAbajo.updateUI();
             }
-            tarifaBase = TarifaFactory.crearTarifa(Integer.parseInt(tipoTar.getText().trim()), tarifaBase,
-                    Double.parseDouble(tarifa.getText().trim()));
+            if(basica.isSelected()){
+                tipoTar = TipoTarifa.BASICA;
+            }
+            else if(dia.isSelected()){
+                tipoTar = TipoTarifa.DIA;
+            }
+            else{
+                tipoTar = TipoTarifa.HORAS;
+            }
+            tarifaBase = TarifaFactory.crearTarifa(tipoTar, tarifaBase,
+                    Double.parseDouble(tarifa.getText().trim()), DayOfWeek.of(dias.getSelectedIndex() + 1),Integer.parseInt(horaInit.getSelectedItem()),Integer.parseInt(horaFin.getSelectedItem()));
 
-            if (texto.equals("Enviar")) {
-                panelFinal.removeAll();
+            if (e.getActionCommand().equals("Enviar")) {
                 try {
                     controlador.setTarifa(nif.getText().trim(), tarifaBase);
                 } catch (NotExistingClientException e1) {
-                    JLabel clienteNoEncontrado = new JLabel("Cliente no encontrado");
-                    panelFinal.add(clienteNoEncontrado);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Cliente no encontrado","Aviso",JOptionPane.WARNING_MESSAGE);
                 }
                 modelo.guardarDatos();
-                panelFinal = new JPanel();
-                JLabel tarifaCambiada = new JLabel("Tarifa cambiada con éxito");
-                panelFinal.add(tarifaCambiada);
-                panelAbajo.add(panelFinal);
-                panelFinal.updateUI();
-                panelAbajo.updateUI();
+                JOptionPane.showMessageDialog(pop,"Tarifa cambiada con éxito","Éxito",JOptionPane.PLAIN_MESSAGE);
             }
         }
     }
 
     class EscuchadorRecuperarCliente implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            submit = (JButton) e.getSource();
-            String texto = submit.getText();
-            if (texto.equals("Enviar")) {
+            if (e.getActionCommand().equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
                     JLabel cliente = new JLabel(controlador.listarDatos(nif.getText().trim()).toString());
                     JScrollPane scroll = new JScrollPane(cliente);
-                    scroll.setPreferredSize(new Dimension(1080, 100));
+                    scroll.setPreferredSize(new Dimension(1000, 100));
                     panelFinal.add(scroll);
                     panelAbajo.add(panelFinal);
                     panelFinal.updateUI();
                     panelAbajo.updateUI();
                 } catch (NotExistingClientException e1) {
-                    JLabel clienteNoEncontrado = new JLabel("Cliente no encontrado");
-                    panelFinal.add(clienteNoEncontrado);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Cliente no encontrado","Aviso",JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
     }
     class EscuchadorRecuperarTodos implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            submit = (JButton) e.getSource();
-            String texto = submit.getText();
-            if (texto.equals("Recuperar")) {
+            if (e.getActionCommand().equals("Recuperar")) {
                 panelFinal.removeAll();
                 try {
                     Collection<Cliente> col = controlador.listaClientes().values();
@@ -1265,19 +1060,15 @@ public class ImplementacionVista implements Vista {
                     }
                     JList<String> clientes = new JList<String>(datos);
                     JScrollPane scroll = new JScrollPane(clientes);
-                    scroll.setPreferredSize(new Dimension(1080, 400));
-                    clientes.setVisibleRowCount(30);
+                    scroll.setPreferredSize(new Dimension(1000, 100));
+                    clientes.setVisibleRowCount(4);
                     panelFinal.add(scroll);
                     panelAbajo.add(panelFinal);
                     scroll.updateUI();
                     panelFinal.updateUI();
                     panelAbajo.updateUI();
                 } catch (NullListClientsException e1) {
-                    JLabel clientesNoEncontrados = new JLabel("Clientes no encontrados");
-                    panelFinal.add(clientesNoEncontrados);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Clientes no encontrados","Aviso",JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
@@ -1285,8 +1076,6 @@ public class ImplementacionVista implements Vista {
 
     class EscuchadorRecuperarTodosEntreFechas implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            submit = (JButton) e.getSource();
-            String texto = submit.getText();
             Calendar fechaInicio = Calendar.getInstance();
             int anoLocal = Integer.parseInt(year.getText().trim());
             int mesLocal = Integer.parseInt(month.getText().trim());
@@ -1297,7 +1086,7 @@ public class ImplementacionVista implements Vista {
             int mesLocal2 = Integer.parseInt(month2.getText().trim());
             int diaLocal2 = Integer.parseInt(day2.getText().trim());
             fechaFin.set(anoLocal2, mesLocal2 - 1, diaLocal2);
-            if (texto.equals("Enviar")) {
+            if (e.getActionCommand().equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
                     Collection<Cliente> col = controlador.mostrarListaClientesEntreFechas(fechaInicio, fechaFin);
@@ -1307,25 +1096,17 @@ public class ImplementacionVista implements Vista {
                     }
                     JList<String> clientes = new JList<String>(datos);
                     JScrollPane scroll = new JScrollPane(clientes);
-                    scroll.setPreferredSize(new Dimension(1080, 400));
-                    clientes.setVisibleRowCount(30);
+                    scroll.setPreferredSize(new Dimension(1000, 100));
+                    clientes.setVisibleRowCount(4);
                     panelFinal.add(scroll);
                     panelAbajo.add(panelFinal);
                     scroll.updateUI();
                     panelFinal.updateUI();
                     panelAbajo.updateUI();
                 } catch (NullListClientsException e1) {
-                    JLabel clientesNoEncontrados = new JLabel("Clientes no encontrados");
-                    panelFinal.add(clientesNoEncontrados);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Cliente no encontrados","Aviso",JOptionPane.WARNING_MESSAGE);
                 } catch (IllegalPeriodException e1) {
-                    JLabel clientesNoEncontrados = new JLabel("Fecha no válida");
-                    panelFinal.add(clientesNoEncontrados);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Fecha no válida","Error",JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -1333,10 +1114,7 @@ public class ImplementacionVista implements Vista {
 
     class EscuchadorDarAltaLlamada implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            submit = (JButton) e.getSource();
-            String texto = submit.getText();
-            if (texto.equals("Enviar")) {
-                panelFinal.removeAll();
+            if (e.getActionCommand().equals("Enviar")) {
                 Calendar fecha_llamada = Calendar.getInstance();
                 int anoLocal = Integer.parseInt(year.getText().trim());
                 int mesLocal = Integer.parseInt(month.getText().trim());
@@ -1352,18 +1130,9 @@ public class ImplementacionVista implements Vista {
                 try {
                     controlador.addLlamada(llamada, nif.getText());
                     modelo.guardarDatos();
-
-                    JLabel llamadaRegistrada = new JLabel("Llamada registrada con éxito");
-                    panelFinal.add(llamadaRegistrada);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Llamada registrada con éxito","Éxito",JOptionPane.PLAIN_MESSAGE);
                 } catch (NotExistingClientException e1) {
-                    JLabel clienteNoEncontrado = new JLabel("Cliente no encontrado");
-                    panelFinal.add(clienteNoEncontrado);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Cliente no encontrado","Aviso",JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
@@ -1371,9 +1140,7 @@ public class ImplementacionVista implements Vista {
 
     class EscuchadorRecuperarTodasLlamadas implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            submit = (JButton) e.getSource();
-            String texto = submit.getText();
-            if (texto.equals("Enviar")) {
+            if (e.getActionCommand().equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
                     Collection<Llamada> col = controlador.listaLlamadas(nif.getText().trim());
@@ -1383,19 +1150,15 @@ public class ImplementacionVista implements Vista {
                     }
                     JList<String> llamadas = new JList<String>(datos);
                     JScrollPane scroll = new JScrollPane(llamadas);
-                    scroll.setPreferredSize(new Dimension(1080, 400));
-                    llamadas.setVisibleRowCount(30);
+                    scroll.setPreferredSize(new Dimension(1000, 100));
+                    llamadas.setVisibleRowCount(4);
                     panelFinal.add(scroll);
                     panelAbajo.add(panelFinal);
                     scroll.updateUI();
                     panelFinal.updateUI();
                     panelAbajo.updateUI();
                 } catch (NotExistingClientException | NullListCallException e1) {
-                    JLabel clienteNoEncontrado = new JLabel("Cliente no encontrado");
-                    panelFinal.add(clienteNoEncontrado);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Cliente no encontrado","Aviso",JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
@@ -1403,8 +1166,6 @@ public class ImplementacionVista implements Vista {
 
     class EscuchadorRecuperarTodasLlamadasEntreFechas implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            submit = (JButton) e.getSource();
-            String texto = submit.getText();
             Calendar fechaInicio = Calendar.getInstance();
             int anoLocal = Integer.parseInt(year.getText().trim());
             int mesLocal = Integer.parseInt(month.getText().trim());
@@ -1415,7 +1176,7 @@ public class ImplementacionVista implements Vista {
             int mesLocal2 = Integer.parseInt(month2.getText().trim());
             int diaLocal2 = Integer.parseInt(day2.getText().trim());
             fechaFin.set(anoLocal2, mesLocal2 - 1, diaLocal2);
-            if (texto.equals("Enviar")) {
+            if (e.getActionCommand().equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
                     Collection<Llamada> col = controlador.mostrarListaLlamadasEntreFechas(nif.getText().trim(), fechaInicio, fechaFin);
@@ -1425,31 +1186,19 @@ public class ImplementacionVista implements Vista {
                     }
                     JList<String> clientes = new JList<String>(datos);
                     JScrollPane scroll = new JScrollPane(clientes);
-                    scroll.setPreferredSize(new Dimension(1080, 400));
-                    clientes.setVisibleRowCount(30);
+                    scroll.setPreferredSize(new Dimension(1000, 100));
+                    clientes.setVisibleRowCount(4);
                     panelFinal.add(scroll);
                     panelAbajo.add(panelFinal);
                     scroll.updateUI();
                     panelFinal.updateUI();
                     panelAbajo.updateUI();
                 } catch (IllegalPeriodException e1) {
-                    JLabel fechaNoValida = new JLabel("Fecha no válida");
-                    panelFinal.add(fechaNoValida);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Fecha no válida","Error",JOptionPane.ERROR_MESSAGE);
                 } catch (NullListCallException e1) {
-                    JLabel listaVacia = new JLabel("Lista vacía");
-                    panelFinal.add(listaVacia);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Lista vacía","Aviso",JOptionPane.WARNING_MESSAGE);
                 } catch (NotExistingClientException e1) {
-                    JLabel clienteNoEncontrado = new JLabel("Cliente no encontrado");
-                    panelFinal.add(clienteNoEncontrado);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Cliente no encontrado","Aviso",JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
@@ -1457,10 +1206,7 @@ public class ImplementacionVista implements Vista {
 
     class EscuchadorEmitirFactura implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            submit = (JButton) e.getSource();
-            String texto = submit.getText();
-            if (texto.equals("Enviar")) {
-                panelFinal.removeAll();
+            if (e.getActionCommand().equals("Enviar")) {
                 Calendar fechaInicio = Calendar.getInstance();
                 int anoLocal = Integer.parseInt(year.getText().trim());
                 int mesLocal = Integer.parseInt(month.getText().trim());
@@ -1475,30 +1221,13 @@ public class ImplementacionVista implements Vista {
                 try {
                     controlador.emitirFactura(codFac.getText().trim(),nif.getText().trim(),fechaInicio, fechaFin);
                     modelo.guardarDatos();
-
-                    JLabel facturaRegistrada = new JLabel("Factura registrada con éxito");
-                    panelFinal.add(facturaRegistrada);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Factura registrada con éxito","Éxito",JOptionPane.PLAIN_MESSAGE);
                 } catch (NotExistingClientException e1) {
-                    JLabel clienteNoEncontrado = new JLabel("Cliente no encontrado");
-                    panelFinal.add(clienteNoEncontrado);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Cliente no encontrado","Aviso",JOptionPane.WARNING_MESSAGE);
                 } catch (IllegalPeriodException e1) {
-                    JLabel fechaNoValida = new JLabel("Fecha no válida");
-                    panelFinal.add(fechaNoValida);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Fecha no válida","Error",JOptionPane.ERROR_MESSAGE);
                 } catch (ExistingInvoiceException e1) {
-                    JLabel facturaYaExiste = new JLabel("Factura ya existe");
-                    panelFinal.add(facturaYaExiste);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Factura ya existe","Aviso",JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
@@ -1506,30 +1235,20 @@ public class ImplementacionVista implements Vista {
 
     class EscuchadorRecuperarFacturas implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            submit = (JButton) e.getSource();
-            String texto = submit.getText();
-            if (texto.equals("Enviar")) {
+            if (e.getActionCommand().equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
                     JLabel fac = new JLabel(controlador.facturaDatos(nif.getText().trim(),codFac.getText().trim()));
                     JScrollPane scroll = new JScrollPane(fac);
-                    scroll.setPreferredSize(new Dimension(1080, 100));
+                    scroll.setPreferredSize(new Dimension(1000, 100));
                     panelFinal.add(scroll);
                     panelAbajo.add(panelFinal);
                     panelFinal.updateUI();
                     panelAbajo.updateUI();
                 } catch (NotExistingInvoceException e1) {
-                    JLabel facturaNoEncontrada = new JLabel("Factura no encontrada");
-                    panelFinal.add(facturaNoEncontrada);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Factura no encontrada","Aviso",JOptionPane.WARNING_MESSAGE);
                 } catch (NotExistingClientException e1) {
-                    JLabel clienteNoEncontrado = new JLabel("Cliente no encontrado");
-                    panelFinal.add(clienteNoEncontrado);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Cliente no encontrado","Aviso",JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
@@ -1537,9 +1256,7 @@ public class ImplementacionVista implements Vista {
 
     class EscuchadorRecuperarTodasFacturas implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            submit = (JButton) e.getSource();
-            String texto = submit.getText();
-            if (texto.equals("Enviar")) {
+            if (e.getActionCommand().equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
                     Collection<Factura> col = controlador.listaFacturas(nif.getText().trim()).values();
@@ -1549,31 +1266,19 @@ public class ImplementacionVista implements Vista {
                     }
                     JList<String> facturas = new JList<String>(datos);
                     JScrollPane scroll = new JScrollPane(facturas);
-                    scroll.setPreferredSize(new Dimension(1080, 400));
-                    facturas.setVisibleRowCount(30);
+                    scroll.setPreferredSize(new Dimension(1000, 100));
+                    facturas.setVisibleRowCount(4);
                     panelFinal.add(scroll);
                     panelAbajo.add(panelFinal);
                     scroll.updateUI();
                     panelFinal.updateUI();
                     panelAbajo.updateUI();
                 } catch (NullListCallException e1) {
-                    JLabel listaVacia = new JLabel("Lista vacía");
-                    panelFinal.add(listaVacia);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Lista vacía","Aviso",JOptionPane.WARNING_MESSAGE);
                 } catch (NotExistingClientException e1) {
-                    JLabel clienteNoEncontrado = new JLabel("Cliente no encontrado");
-                    panelFinal.add(clienteNoEncontrado);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Cliente no encontrado","Aviso",JOptionPane.WARNING_MESSAGE);
                 } catch (NullListInvoicesException e1) {
-                    JLabel listaVacia = new JLabel("Lista de facturas vacía");
-                    panelFinal.add(listaVacia);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Lista de facturas vacía","Aviso",JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
@@ -1581,8 +1286,6 @@ public class ImplementacionVista implements Vista {
 
     class EscuchadorRecuperarTodasFacturasEntreFechas implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            submit = (JButton) e.getSource();
-            String texto = submit.getText();
             Calendar fechaInicio = Calendar.getInstance();
             int anoLocal = Integer.parseInt(year.getText().trim());
             int mesLocal = Integer.parseInt(month.getText().trim());
@@ -1593,7 +1296,7 @@ public class ImplementacionVista implements Vista {
             int mesLocal2 = Integer.parseInt(month2.getText().trim());
             int diaLocal2 = Integer.parseInt(day2.getText().trim());
             fechaFin.set(anoLocal2, mesLocal2 - 1, diaLocal2);
-            if (texto.equals("Enviar")) {
+            if (e.getActionCommand().equals("Enviar")) {
                 panelFinal.removeAll();
                 try {
                     Collection<Factura> col = controlador.mostrarListaFacturasEntreFechas(nif.getText().trim(), fechaInicio, fechaFin);
@@ -1603,54 +1306,22 @@ public class ImplementacionVista implements Vista {
                     }
                     JList<String> facturas = new JList<String>(datos);
                     JScrollPane scroll = new JScrollPane(facturas);
-                    scroll.setPreferredSize(new Dimension(1080, 400));
-                    facturas.setVisibleRowCount(30);
+                    scroll.setPreferredSize(new Dimension(1000, 100));
+                    facturas.setVisibleRowCount(4);
                     panelFinal.add(scroll);
                     panelAbajo.add(panelFinal);
                     scroll.updateUI();
                     panelFinal.updateUI();
                     panelAbajo.updateUI();
                 } catch (IllegalPeriodException e1) {
-                    JLabel fechaNoValida = new JLabel("Fecha no válida");
-                    panelFinal.add(fechaNoValida);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Fecha no válida","Error",JOptionPane.ERROR_MESSAGE);
                 } catch (NotExistingClientException e1) {
-                    JLabel clienteNoEncontrado = new JLabel("Cliente no encontrado");
-                    panelFinal.add(clienteNoEncontrado);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Cliente no encontrado","Aviso",JOptionPane.WARNING_MESSAGE);
                 } catch (NullListCallException e1) {
-                    JLabel listaVacia = new JLabel("Lista de llamadas vacía");
-                    panelFinal.add(listaVacia);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Lista de llamadas vacía","Aviso",JOptionPane.WARNING_MESSAGE);
                 } catch (NullListInvoicesException e1) {
-                    JLabel listaVacia = new JLabel("Lista de facturas vacía");
-                    panelFinal.add(listaVacia);
-                    panelAbajo.add(panelFinal);
-                    panelFinal.updateUI();
-                    panelAbajo.updateUI();
+                    JOptionPane.showMessageDialog(pop,"Lista de facturas vacía","Aviso",JOptionPane.WARNING_MESSAGE);
                 }
-            }
-        }
-    }
-
-    class EscuchadorPrincipal implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            JButton boton = (JButton) e.getSource();
-            String texto = boton.getText();
-            if (texto.equals("Gestión clientes")) {
-                GUICliente();
-            }
-            if (texto.equals("Gestión llamadas")) {
-                GUILlamada();
-            }
-            if (texto.equals("Gestión facturas")) {
-                GUIFactura();
             }
         }
     }

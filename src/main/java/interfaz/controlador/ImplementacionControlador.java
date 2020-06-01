@@ -5,6 +5,7 @@ import java.util.*;
 import clientes.Cliente;
 import clientes.ClienteFactory;
 import clientes.Direccion;
+import clientes.TipoCliente;
 import excepciones.*;
 import facturas.Factura;
 import interfaz.modelo.Modelo;
@@ -21,7 +22,7 @@ public class ImplementacionControlador implements Controlador{
         this.modelo = modelo;
     }
 
-    public boolean addCliente(int tipo, String nombre, String apellidos, String nif, Direccion dir, String correo, Calendar fecha, Tarifa tarifa) throws ExistingClientException {
+    public boolean addCliente(TipoCliente tipo, String nombre, String apellidos, String nif, Direccion dir, String correo, Calendar fecha, Tarifa tarifa) throws ExistingClientException {
         Cliente cliente = ClienteFactory.crearCliente(tipo, nombre, apellidos, nif, dir, correo, tarifa, fecha);
         return modelo.addCliente(cliente);
 

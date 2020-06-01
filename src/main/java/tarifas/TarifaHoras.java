@@ -3,12 +3,15 @@ package tarifas;
 import llamadas.Llamada;
 
 import java.util.Calendar;
-// TODO: sería mejor que las horas fueran parámetros para poder elegirlas
-//lo haremos para la entrega final
-public class TarifaTarde extends TarifaExtra{
+
+public class TarifaHoras extends TarifaExtra{
     private static final long serialVersionUID = 42L;
-    public TarifaTarde(Tarifa tarifa, double importeExtra) {
+    private int horaInit;
+    private  int horaFin;
+    public TarifaHoras(Tarifa tarifa, double importeExtra, int horaInit, int horaFin) {
         super(tarifa,importeExtra);
+        this.horaInit = horaInit;
+        this.horaFin = horaFin;
     }
     @Override
     public double calcularImporte(Llamada llamada){
@@ -22,7 +25,7 @@ public class TarifaTarde extends TarifaExtra{
 
     @Override
     public String descripcion() {
-        return super.descripcion() + ", Tarde " + getPrecioPorMinuto();
+        return super.descripcion() + ", De" + horaInit + "a " + horaFin + ": " + getPrecioPorMinuto();
     }
 
 }

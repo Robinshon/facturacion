@@ -1,15 +1,10 @@
+import java.time.DayOfWeek;
 import java.util.Calendar;
 import static org.junit.jupiter.api.Assertions.*;
 
-import clientes.ClienteFactory;
-import clientes.Direccion;
-import clientes.Empresa;
-import clientes.Particular;
+import clientes.*;
 import org.junit.jupiter.api.*;
-import tarifas.TarifaBasica;
-import tarifas.TarifaDomingo;
-import tarifas.TarifaFactory;
-import tarifas.TarifaTarde;
+import tarifas.*;
 
 
 class FactoryTest {
@@ -44,12 +39,12 @@ class FactoryTest {
 
     @Test
     public void testCliente() {
-        Empresa empresa2 = (Empresa) ClienteFactory.crearCliente(0, nombre, apellidos, nif, dir, correo, tarifa, fecha);
+        Empresa empresa2 = (Empresa) ClienteFactory.crearCliente(TipoCliente.EMPRESA, nombre, apellidos, nif, dir, correo, tarifa, fecha);
         assertEquals(empresa.getNombre(), empresa2.getNombre());
         assertEquals(empresa.getEmail(), empresa2.getEmail());
         assertEquals(empresa.getNIF(), empresa2.getNIF());
 
-        Particular particular2 = (Particular) ClienteFactory.crearCliente(1, nombre, apellidos, nif, dir, correo, tarifa ,fecha);
+        Particular particular2 = (Particular) ClienteFactory.crearCliente(TipoCliente.PARTICULAR, nombre, apellidos, nif, dir, correo, tarifa ,fecha);
         assertEquals(particular.getNombre(), particular2.getNombre());
         assertEquals(particular.getApellido(), particular2.getApellido());
         assertEquals(particular.getEmail(), particular2.getEmail());
@@ -60,15 +55,15 @@ class FactoryTest {
     @Test
     public void testTarifa() {
         TarifaBasica tarifaB = null;
-        tarifaB = (TarifaBasica) TarifaFactory.crearTarifa(0, tarifaB, 5);
+        tarifaB = (TarifaBasica) TarifaFactory.crearTarifa(TipoTarifa.BASICA, tarifaB, 5,null,null,null);
         assertEquals(tarifa.getPrecioPorMinuto(), tarifaB.getPrecioPorMinuto());
 
-        TarifaDomingo tarifaD = (TarifaDomingo) TarifaFactory.crearTarifa(1, tarifaB, 2);
-        tarifa = new TarifaDomingo(tarifa, 2);
+        TarifaDia tarifaD = (TarifaDia) TarifaFactory.crearTarifa(TipoTarifa.DIA, tarifaB, 2,DayOfWeek.SUNDAY,null,null);
+        tarifa = new TarifaDia(tarifa, 2, DayOfWeek.SUNDAY);
         assertEquals(tarifa.getPrecioPorMinuto(), tarifaD.getPrecioPorMinuto());
 
-        TarifaTarde tarifaT = (TarifaTarde) TarifaFactory.crearTarifa(2, tarifaB, 3);
-        tarifa = new TarifaTarde(tarifa, 3);
+        TarifaHoras tarifaT = (TarifaHoras) TarifaFactory.crearTarifa(TipoTarifa.HORAS, tarifaB, 3,null,16,20);
+        tarifa = new TarifaHoras(tarifa, 3,16,20);
         assertEquals(tarifa.getPrecioPorMinuto(), tarifaT.getPrecioPorMinuto());
 
     }
